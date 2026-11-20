@@ -15,7 +15,7 @@ button,input,select{font:inherit;color:inherit}.hidden{display:none!important}
 .hero h1{margin:6px 0 4px;font-size:clamp(30px,4.2vw,46px);line-height:1.08;font-weight:900;letter-spacing:-.02em}
 .hero h1 .a{color:#e0675a}.hero h1 .b{background:linear-gradient(90deg,#d99a1e,#43b6a8);-webkit-background-clip:text;background-clip:text;color:transparent}
 .subtitle{margin:0;color:var(--muted);font-size:15.5px}
-.logo{width:112px;flex:0 0 112px}.logo svg{display:block;width:100%;height:auto}
+.logo{width:112px;flex:0 0 112px}
 details.howto{margin:10px 0;border:2px solid #9fb6e8;border-bottom-width:5px;border-radius:18px;background:linear-gradient(120deg,#f7f3ff,#eef7ff)}
 details.howto>summary{list-style:none;cursor:pointer;padding:12px 18px;font-weight:900;font-size:18px;min-height:48px;display:flex;justify-content:space-between;align-items:center}
 details.howto>summary::-webkit-details-marker{display:none}
@@ -27,6 +27,7 @@ details.howto ul{margin:0 18px 14px;padding-left:22px;line-height:1.6}
 .mode:hover{transform:translateY(-3px);box-shadow:0 10px 20px #26344018}
 .mode.on{outline:3px solid var(--ma);outline-offset:3px}
 .mode .ic{grid-row:span 2;width:50px;height:50px;border-radius:12px;display:grid;place-items:center;background:var(--ma);color:#fff;font-size:22px}
+.mode .ic.art{background:none;padding:0}.mode .ic.art img{width:100%;height:100%;display:block}
 .mode b{font-size:16.5px;line-height:1.2}.mode small{font-size:12px;color:#4c5a65;font-weight:600}
 .main{display:grid;grid-template-columns:minmax(0,1fr) 330px;grid-template-areas:"card ref" "card jour" "card vid";gap:14px;align-items:start;margin-top:10px}
 #practice{grid-area:card;position:relative;overflow:hidden}#refPanel{grid-area:ref}#journey{grid-area:jour}#videoPanel{grid-area:vid}
@@ -135,7 +136,7 @@ details.howto ul{margin:0 18px 14px;padding-left:22px;line-height:1.6}
 .xprow{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;font-weight:800;font-size:14px}
 .track{height:12px;background:#ece5d6;border-radius:99px;overflow:hidden}.fill{height:100%;width:0;background:linear-gradient(90deg,#8fd8c8,#f7c968);transition:width .3s}
 .badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-top:10px}
-.bdg{border:2px dashed #c3ccd4;border-radius:12px;padding:7px 9px;font-size:12.5px;color:#4c5a65;background:#fff;display:grid;grid-template-columns:34px 1fr;gap:8px;align-items:center}.bdg .e{font-size:26px;text-align:center;filter:grayscale(1) opacity(.5)}.bdg.got .e{filter:none}
+.bdg{border:2px dashed #c3ccd4;border-radius:12px;padding:7px 9px;font-size:12.5px;color:#4c5a65;background:#fff;display:grid;grid-template-columns:48px 1fr;gap:8px;align-items:center}.bdg img{width:48px;height:48px;display:block;filter:grayscale(1) opacity(.45)}.bdg.got img{filter:none}.bdg .e{font-size:26px;text-align:center;filter:grayscale(1) opacity(.5)}.bdg.got .e{filter:none}
 .bdg:not(.got) b:after{content:' (not yet)';font-weight:700;font-size:11px;color:#5c6a75}.bdg.got{border:2px solid #f0cf86;background:#fff8e6}.bdg b{display:block;font-size:13.5px}
 .vidcard{background:linear-gradient(120deg,#fff7ef,#fdf0f4);border:1px solid #f1d9cf;border-radius:14px;padding:9px 12px;margin-bottom:10px}
 .vidcard small{display:block;font-size:11.5px;font-weight:900;text-transform:uppercase;color:#b0544a}
@@ -161,11 +162,7 @@ details.howto ul{margin:0 18px 14px;padding-left:22px;line-height:1.6}
  <h1><span class="a">Nuclear</span> <span class="b">Glow Up!</span></h1>
  <p class="subtitle">Unstable nuclei glow up into stable ones. Fire decays, block radiation, watch half-lives tick, and start a chain reaction.</p>
 </div>
-<div class="logo" aria-hidden="true"><svg viewBox="0 0 120 120"><defs><radialGradient id="lg" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#fff3b0"/><stop offset=".6" stop-color="#f7c968" stop-opacity=".55"/><stop offset="1" stop-color="#f7c968" stop-opacity="0"/></radialGradient></defs>
- <circle cx="60" cy="60" r="56" fill="url(#lg)"/>
- <g stroke="#2f8fd0" stroke-width="3" fill="none" opacity=".75"><ellipse cx="60" cy="60" rx="46" ry="17"/><ellipse cx="60" cy="60" rx="46" ry="17" transform="rotate(60 60 60)"/><ellipse cx="60" cy="60" rx="46" ry="17" transform="rotate(-60 60 60)"/></g>
- <g stroke-width="1.5"><circle cx="53" cy="55" r="8" fill="#e0675a" stroke="#a8443a"/><circle cx="67" cy="55" r="8" fill="#9aa9b6" stroke="#6b7a86"/><circle cx="60" cy="67" r="8" fill="#e0675a" stroke="#a8443a"/><circle cx="50" cy="68" r="7" fill="#9aa9b6" stroke="#6b7a86"/><circle cx="70" cy="68" r="7" fill="#9aa9b6" stroke="#6b7a86"/><circle cx="60" cy="47" r="7" fill="#e0675a" stroke="#a8443a"/></g>
- <path d="M86 30 q6 -6 12 0 t12 0" stroke="#d99a1e" stroke-width="3.5" fill="none" stroke-linecap="round"/><circle cx="24" cy="92" r="5" fill="#2f7fbf"/><circle cx="96" cy="90" r="5.5" fill="#43b6a8"/></svg></div>
+<div class="logo" aria-hidden="true"><img src="assets/logo.webp" alt="" width="112" height="112" style="width:100%;height:auto;display:block"></div>
 </header>
 <main id="main">
 <details class="howto"><summary>📘 How to use this game</summary><ul>
@@ -629,7 +626,7 @@ const BADGES=[['first','🌱','First Answer','Answer a question',j=>j.correct>=1
 function earn(){BADGES.forEach(([id,e,t,,ok])=>{if(!J.badges[id]&&ok(J)){J.badges[id]=1;toast(`Badge earned: ${e} ${t}`)}})}
 function renderJ(){const l=Math.floor(J.xp/100)+1,i=J.xp%100;$('jChip').textContent=`Level ${l} • ${J.xp} XP`;$('lvl').textContent='Level '+l;$('xpFill').style.width=i+'%';$('xpTxt').textContent=i+' / 100 XP';
  renderFix();
- $('badges').innerHTML=BADGES.map(([id,e,t,d])=>`<div class="bdg ${J.badges[id]?'got':''}"><span class="e" aria-hidden="true">${e}</span><span><b>${t}</b>${d}</span></div>`).join('')}
+ $('badges').innerHTML=BADGES.map(([id,e,t,d])=>`<div class="bdg ${J.badges[id]?'got':''}"><img src="assets/ach-${id}.webp" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'e',textContent:'${e}'}))"><span><b>${t}</b>${d}</span></div>`).join('')}
 /* ---- Fix my mistakes: count each kind of slip on this device; offer 5 targeted questions once a slip repeats ---- */
 function slip(code){if(!code||!SLIPS[code])return '';const q=state.q||{};q.slipped=q.slipped||{};if(q.slipped[code])return '';q.slipped[code]=1;J.slips=J.slips||{};J.slips[code]=(J.slips[code]||0)+1;try{localStorage.setItem(JK,JSON.stringify(J))}catch(e){}renderFix();
  const n=J.slips[code];if(n<2||(state.fix&&state.fix.code===code)||state.mode==='quiz')return '';
@@ -643,7 +640,7 @@ function award(assisted){const before=Math.floor(J.xp/100);if(assisted)J.xp+=2;e
 function stats(){[['nCorrect',state.correct],['nStreak',state.streak],['nAssist',state.assist]].forEach(([id,v])=>{const e=$(id);if(e.textContent!==String(v)){e.textContent=v;const p=e.parentElement;p.classList.remove('pop');void p.offsetWidth;p.classList.add('pop')}})}
 function fb(k,h){$('fb').className='fb '+k;$('fb').innerHTML=h}
 function log(ok){if(state.logged)return;state.logged=true;try{window.ddTrack&&ddTrack({game:'nuclear',course:'3A',mode:MODES.find(m=>m.id===state.mode).title,topic:state.q.topic||state.q.video||'',correct:!!ok})}catch(e){}}
-function buildModes(){$('modes').innerHTML=MODES.map(m=>`<button type="button" class="mode ${m.id===state.mode?'on':''}" aria-pressed="${m.id===state.mode}" data-m="${m.id}" style="--mb:${m.mb};--ma:${m.ma}"><span class="ic" aria-hidden="true">${m.icon}</span><b>${m.title}</b><small>${m.short}</small></button>`).join('');
+function buildModes(){$('modes').innerHTML=MODES.map(m=>`<button type="button" class="mode ${m.id===state.mode?'on':''}" aria-pressed="${m.id===state.mode}" data-m="${m.id}" style="--mb:${m.mb};--ma:${m.ma}"><span class="ic art" aria-hidden="true"><img src="assets/mode-${m.id}.webp" alt="" onerror="this.parentNode.classList.remove('art');this.parentNode.textContent='${m.icon}'"></span><b>${m.title}</b><small>${m.short}</small></button>`).join('');
  $('modes').querySelectorAll('.mode').forEach(b=>b.onclick=()=>{state.fix=null;state.mode=b.dataset.m;ui.mode=state.mode;saveUI();buildModes();next()})}
 /* labs */
 const LABS={decay:Decay,shield:Shield,half:Half,power:Power};const labHost=document.createElement('div');

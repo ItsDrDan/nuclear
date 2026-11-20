@@ -2,7 +2,7 @@
 
 Study game for CHEM 3A, matched to Lecture 30 (Nuclear Chemistry), the Chapter 14 learning objectives in Canvas, the Week 17 MyOpenMath homework, and the CHEM 3A textbook's Chapter 14. Live at https://itsdrdan.github.io/nuclear/.
 
-Current version: 1.4
+Current version: 1.5
 
 - `index.html`: the whole game (standalone). Loads the brand kit (`games/brand/itsdrdan.css`, `embed.js`), `chemparse.v2.js` and `games/track.js` for anonymous stats.
 - Modes:
