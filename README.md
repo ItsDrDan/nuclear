@@ -2,7 +2,7 @@
 
 Study game for CHEM 3A, matched to Lecture 30 (Nuclear Chemistry), the Chapter 14 learning objectives in Canvas, the Week 17 MyOpenMath homework, and the CHEM 3A textbook's Chapter 14. Live at https://itsdrdan.github.io/nuclear/.
 
-Current version: 1.6
+Current version: 1.7
 
 - `index.html`: the whole game (standalone). Loads the brand kit (`games/brand/itsdrdan.css`, `embed.js`), `chemparse.v2.js` and `games/track.js` for anonymous stats.
 - Modes:
@@ -18,6 +18,8 @@ Current version: 1.6
   - 🎯 Skill Check (v1.6): the student picks a 🎯 Practice run (10 questions, one per topic; hints, Step Map and retries on; first tries score) or a 📝 Exam rehearsal (15 questions in test format: one try each, no hints, a running clock, no right/wrong until the end, then every answer with its explanation). Both end with a study plan.
   - ⛓️ Chain Walk (v1.6): in the Decay Lab (U-238 and Ra-226), walk the nucleus to lead-206 with α and β⁻ (↶ Undo, zoomed band chart, a coach box), then count the α and β⁻ decays. Typed decay-series questions (U-238, U-235, Th-232, Ra-226, Rn-222) in Balance It! and the Exam rehearsal.
   - 📏 Dose & Units (v1.6): typed problems in Radiation & You with Step Maps: mCi ↔ MBq, mSv → mrem, Gy ↔ rad, pCi → Bq (radon), dose by body weight in pounds, volume to draw from a vial, percent of the worker dose limit (textbook 14.9 values: 1 Ci = 3.7 × 10¹⁰ Bq, 2.2046 lb/kg).
+- 📊 Class report (v1.7): [report.html](https://itsdrdan.github.io/nuclear/report.html) shows Dr. Dan which topics to reteach (first-try right rate per topic), the most common slips, Exam rehearsal scores and times, and practice by mode, for the last 7, 30 or 120 days. It reads the anonymous stats the game sends through games/track.js (topic, first-try right/wrong, slip as `nuc-<code>`, and for Skill Check runs a random run code and seconds); no names or typed answers. Built from `tools/report-src.html` by `tools/build.js`.
+- ♿ Accessibility (v1.7): axe-core 4.10.2 scan of every mode (question, selected, checked, Exam rehearsal and summary states) and the report page: 0 issues. Text contrast checked by hand on gradient backgrounds (Check button, choice numbers, video label darkened to 4.5:1 or more). Lab canvases have live text descriptions; sliders speak their units; the Shield Lab announces one settled reading after a change instead of the count that changes twice a second; focus moves to the question after choosing a Skill Check type.
 - Deep links: `?mode=decay|balance|shield|half|power|ideas|quiz`, and `&sys=<sample>` for the Decay Lab (`u238 ra226 am241 c14 i131 co60 f18 i125 tc99m`) or Half-Life Lab (`i131 tc99m c14 co60 ir192 rn222 f18`), e.g. `?mode=decay&sys=c14`.
 - Source: edit `tools/page-src.html` (page, questions, UI) and `tools/engine-src.js` (nuclear data and the four labs), then `node tools/build.js` to rebuild `index.html`.
 - Tests: `node tools/check.js` (≈35,000 checks: every generated question has its answer among the choices and a reason for each wrong choice; every nuclear equation balances with real element symbols; numeric answers pass their own sig-fig rule; lecture-slide and MyOpenMath values; the fission lab sustains a chain with large fuel, fizzles with small fuel and stops with the rods in; fusion only when hot).

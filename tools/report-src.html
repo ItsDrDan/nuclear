@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Nuclear Glow Up! class report</title>
+<link rel="icon" href="assets/logo.webp">
+<style>
+:root{--bg:#fbf8ff;--panel:#fff;--ink:#2f2a45;--muted:#625d78;--line:#e7e1f3;--good:#2e8a5f;--bad:#c9433f;--warn:#b7791f;--accent:#6c5ce7;--r:18px}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:linear-gradient(180deg,#fff3d6,#fbf8ff 260px);color:var(--ink)}
+.wrap{max-width:1100px;margin:0 auto;padding:22px 16px 60px}
+header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+header img{width:56px;height:56px}
+h1{font-size:1.5rem;margin:0}
+.sub{color:var(--muted);margin:2px 0 0;font-size:.92rem}
+.controls{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+.controls button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;min-height:40px;font:inherit;font-size:.9rem;cursor:pointer;color:var(--ink)}
+.controls button[aria-pressed=true]{background:var(--accent);color:#fff;border-color:var(--accent)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:14px 0}
+.kpi,.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:0 6px 20px #6c5ce712}
+.kpi b{display:block;font-size:2rem;line-height:1.1}
+.kpi span{color:var(--muted);font-size:.85rem}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media(max-width:820px){.grid2{grid-template-columns:1fr}}
+.panel h2{font-size:1.05rem;margin:0 0 4px}
+.panel p.how{color:var(--muted);font-size:.85rem;margin:0 0 10px}
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+th,td{text-align:left;padding:7px 6px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{color:var(--muted);font-weight:600;font-size:.8rem;text-transform:uppercase;letter-spacing:.03em}
+td.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.bar{height:8px;border-radius:6px;background:#eee;overflow:hidden;min-width:60px}
+.bar i{display:block;height:100%}
+.tag{display:inline-block;font-size:.72rem;padding:1px 8px;border-radius:999px;background:#fdecea;color:#9b2c28;margin-left:4px;white-space:nowrap}
+.tag.few{background:#f1f1f4;color:#5c5872}
+a{color:#4b3db8}
+.note{color:var(--muted);font-size:.85rem;margin-top:16px}
+.empty{color:var(--muted);padding:12px 4px}
+.hist{display:flex;align-items:flex-end;gap:3px;height:120px;margin:8px 0 2px}
+.hist div{flex:1;background:#b9b0f2;border-radius:4px 4px 0 0;min-height:2px;position:relative}
+.hist div.top{background:#2e8a5f}
+.hlab{display:flex;gap:3px;font-size:.7rem;color:var(--muted)}.hlab span{flex:1;text-align:center}
+#status{color:var(--muted);font-size:.9rem}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+</style>
+</head>
+<body>
+<main class="wrap">
+ <header>
+  <img src="assets/logo.webp" alt="">
+  <div><h1>Nuclear Glow Up! class report</h1><p class="sub">Anonymous practice data from the CHEM 3A Chapter 14 game. What should I reteach?</p></div>
+  <div class="controls" role="group" aria-label="Time window"><button type="button" data-days="7">7 days</button><button type="button" data-days="30">30 days</button><button type="button" data-days="120">120 days</button></div>
+ </header>
+ <p id="status" role="status" aria-live="polite">Loading…</p>
+ <div class="kpis" id="kpis"></div>
+ <section class="panel"><h2>Topics to reteach</h2><p class="how">First-try right rate for every topic, lowest first. A first try that used 👀 Show Answer counts as a miss. Topics with fewer than 10 answers are marked “few answers”.</p><div id="topics"></div></section>
+ <div class="grid2">
+  <section class="panel"><h2>Most common slips</h2><p class="how">The first mistake the game recognized on a question (each kind counted once per question).</p><div id="slips"></div></section>
+  <section class="panel"><h2>Exam rehearsals</h2><p class="how">Each 📝 Exam rehearsal is one try per question. Scores out of <span class="examN"></span>; green bars are 80% or more.</p><div id="exams"></div></section>
+ </div>
+ <div class="grid2">
+  <section class="panel"><h2>Exam rehearsal by topic</h2><p class="how">Right rate on Exam rehearsal questions only (no hints, one try).</p><div id="examTopics"></div></section>
+  <section class="panel"><h2>Where students practice</h2><p class="how">Answers and first-try right rate by game mode.</p><div id="modes"></div></section>
+ </div>
+ <p class="note">No names, emails, student IDs or typed answers are collected: only the topic, whether the first try was right, the kind of slip, and for Skill Check runs a random run code and seconds per question. Students who turn on “Do Not Track” are not counted. Data comes from the same stats service as the <a href="https://itsdrdan.github.io/games/stats.html">Study Hub game stats</a>.</p>
+</main>
+<script>
+const STATS_URL='https://script.google.com/macros/s/AKfycbylSKoW9GE6AkN4HiC1uts3Y5Z4oUPHY7OQ88vXrjpcanooloYRTIGW9cS5n0dulp4vQg/exec';
+const MAPS=/*@MAPS@*/;
+const $=id=>document.getElementById(id),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pct=(a,b)=>b?Math.round(a/b*100):0,col=p=>p>=80?'var(--good)':p>=60?'var(--warn)':'var(--bad)';
+const bar=p=>`<div class="bar" aria-hidden="true"><i style="width:${p}%;background:${col(p)}"></i></div>`;
+const tname=t=>MAPS.topics[t]?MAPS.topics[t][0]:t||'(other)';
+const mmss=s=>Math.floor(s/60)+':'+String(Math.round(s%60)).padStart(2,'0');
+document.querySelectorAll('.examN').forEach(e=>e.textContent=MAPS.examN);
+let days=30;try{days=+(localStorage.getItem('nucReportDays')||30)||30}catch(e){}
+document.querySelectorAll('[data-days]').forEach(b=>b.onclick=()=>{days=+b.dataset.days;try{localStorage.setItem('nucReportDays',days)}catch(e){}load()});
+async function getJSON(u){const r=await fetch(u,{cache:'no-store'});if(!r.ok)throw new Error(r.status);return r.json()}
+async function load(){document.querySelectorAll('[data-days]').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.days===days));$('status').textContent=`Loading the last ${days} days…`;
+ let sum,rows;try{[sum,rows]=await Promise.all([getJSON(`${STATS_URL}?days=${days}`),getJSON(`${STATS_URL}?items=1&rows=1&game=nuclear&days=${days}`).catch(()=>({rows:[]}))])}catch(e){$('status').textContent='Could not reach the stats service. Try again in a minute.';return}
+ render(sum,(rows&&rows.rows)||[])}
+function render(sum,rows){
+ const T=(sum.topics||[]).filter(t=>t.game==='nuclear');const tot=T.reduce((a,t)=>a+t.answers,0),wrong=T.reduce((a,t)=>a+t.wrong,0);const g=(sum.games||[]).find(x=>x.game==='nuclear');
+ /* exam runs: rows are [item, ver, pick, correct, mode, session, ex, sec] */
+ const runs={};rows.filter(r=>r[4]==='Exam rehearsal'&&r[6]).forEach(r=>{const k=r[6];(runs[k]=runs[k]||{n:0,ok:0,sec:0,topics:[]});runs[k].n++;if(r[3]===true||r[3]==='true'||r[3]===1)runs[k].ok++;runs[k].sec+=+r[7]||0});
+ const done=Object.values(runs).filter(r=>r.n>=MAPS.examN);
+ $('status').textContent=tot?`Last ${days} days · updated ${new Date(sum.generated).toLocaleString()}`:`No answers from this game in the last ${days} days yet. Data appears here as soon as students play on itsdrdan.github.io (Canvas and the textbook count too).`;
+ const avg=done.length?done.reduce((a,r)=>a+r.ok,0)/done.length:0;
+ $('kpis').innerHTML=[[tot,'answers'],[tot?pct(tot-wrong,tot)+'%':'–','right on the first try'],[g?g.sessions:0,'study sessions'],[done.length,'Exam rehearsals finished'],[done.length?avg.toFixed(1)+' / '+MAPS.examN:'–','average Exam rehearsal score']].map(([b,s])=>`<div class="kpi"><b>${b}</b><span>${s}</span></div>`).join('');
+ /* topics across all modes */
+ const by={};T.forEach(t=>{const k=t.topic;(by[k]=by[k]||{a:0,w:0});by[k].a+=t.answers;by[k].w+=t.wrong});
+ const tl=Object.entries(by).map(([k,v])=>({k,a:v.a,p:pct(v.a-v.w,v.a)})).sort((x,y)=>(x.a<10)-(y.a<10)||x.p-y.p);
+ $('topics').innerHTML=tl.length?`<table><thead><tr><th>Topic</th><th class="n">Answers</th><th class="n">First try right</th><th style="width:28%"><span class="vh">Chart</span></th></tr></thead><tbody>${tl.map(t=>`<tr><td>${esc(tname(t.k))}${t.a<10?'<span class="tag few">few answers</span>':t.p<60?'<span class="tag">reteach</span>':''}${MAPS.topics[t.k]?` · <a href="./?mode=${MAPS.topics[t.k][1]}" target="_blank" rel="noopener">open</a>`:''}</td><td class="n">${t.a}</td><td class="n">${t.p}%</td><td>${bar(t.p)}</td></tr>`).join('')}</tbody></table>`:'<p class="empty">No topic data yet.</p>';
+ /* slips */
+ const S=(sum.slips||[]).filter(s=>/^nuc-/.test(s.slip)).sort((a,b)=>b.n-a.n),sn=S.reduce((a,s)=>a+s.n,0);
+ $('slips').innerHTML=S.length?`<table><thead><tr><th>Slip</th><th class="n">Times</th><th class="n">Share</th></tr></thead><tbody>${S.slice(0,12).map(s=>`<tr><td>${esc(MAPS.slips[s.slip.slice(4)]||s.slip.slice(4))}</td><td class="n">${s.n}</td><td class="n">${pct(s.n,sn)}%</td></tr>`).join('')}</tbody></table>`:'<p class="empty">No slips recorded yet.</p>';
+ /* exam histogram */
+ if(done.length){const h=Array(MAPS.examN+1).fill(0);done.forEach(r=>h[Math.min(MAPS.examN,r.ok)]++);const m=Math.max(...h);
+  const med=done.map(r=>r.sec).sort((a,b)=>a-b)[Math.floor(done.length/2)];
+  $('exams').innerHTML=`<div class="hist" role="img" aria-label="Exam rehearsal scores: ${h.map((v,i)=>v?`${v} at ${i}`:'').filter(Boolean).join(', ')}">${h.map((v,i)=>`<div class="${i/MAPS.examN>=0.8?'top':''}" style="height:${m?v/m*100:0}%" title="${v} scored ${i}"></div>`).join('')}</div><div class="hlab" aria-hidden="true">${h.map((_,i)=>`<span>${i%3===0||i===MAPS.examN?i:''}</span>`).join('')}</div>
+  <p>${done.length} finished · average ${avg.toFixed(1)} / ${MAPS.examN} (${pct(avg,MAPS.examN)}%) · ${done.filter(r=>r.ok/MAPS.examN>=0.8).length} at 80% or more · median time ${mmss(med)}</p>`}
+ else $('exams').innerHTML=`<p class="empty">No finished Exam rehearsals yet${Object.keys(runs).length?` (${Object.keys(runs).length} started)`:''}.</p>`;
+ /* exam by topic (summary rows with mode Exam rehearsal) */
+ const ET=T.filter(t=>t.mode==='Exam rehearsal').map(t=>({k:t.topic,a:t.answers,p:pct(t.answers-t.wrong,t.answers)})).sort((x,y)=>x.p-y.p);
+ $('examTopics').innerHTML=ET.length?`<table><thead><tr><th>Topic</th><th class="n">Answers</th><th class="n">Right</th><th style="width:28%"><span class="vh">Chart</span></th></tr></thead><tbody>${ET.map(t=>`<tr><td>${esc(tname(t.k))}</td><td class="n">${t.a}</td><td class="n">${t.p}%</td><td>${bar(t.p)}</td></tr>`).join('')}</tbody></table>`:'<p class="empty">No Exam rehearsal answers yet.</p>';
+ /* modes */
+ const M={};T.forEach(t=>{(M[t.mode]=M[t.mode]||{a:0,w:0});M[t.mode].a+=t.answers;M[t.mode].w+=t.wrong});
+ const ml=Object.entries(M).sort((a,b)=>b[1].a-a[1].a);
+ $('modes').innerHTML=ml.length?`<table><thead><tr><th>Mode</th><th class="n">Answers</th><th class="n">First try right</th></tr></thead><tbody>${ml.map(([k,v])=>`<tr><td>${esc(k)}</td><td class="n">${v.a}</td><td class="n">${pct(v.a-v.w,v.a)}%</td></tr>`).join('')}</tbody></table>`:'<p class="empty">No answers yet.</p>'}
+load();
+</script>
+</body>
+</html>

@@ -175,7 +175,9 @@ const Shield=(()=>{
  function set(k,v){s[k]=v;s.ps=[];s.seen[s.rad+':'+s.sh]=1;sync();emit('set:'+k)}
  function sync(){if(!el.cv)return;el.root.querySelectorAll('[data-rad]').forEach(b=>{const on=b.dataset.rad===s.rad;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
   el.root.querySelectorAll('[data-sh]').forEach(b=>{const on=b.dataset.sh===s.sh;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
-  el.dist.value=s.d;setTxt(el.dout,s.d+' cm');s.shown=cpm(s.rad,s.sh,s.d);readout()}
+  el.dist.value=s.d;setTxt(el.dout,s.d+' cm');el.dist.setAttribute('aria-valuetext',s.d+' centimeters');s.shown=cpm(s.rad,s.sh,s.d);readout();announce()}
+ /* screen readers hear one settled reading after a change, not the count that jitters twice a second */
+ function announce(){clearTimeout(announce.t);announce.t=setTimeout(()=>{if(!el.say)return;const e=cpm(s.rad,s.sh,s.d);el.say.textContent=`${PNAME[s.rad]}s, ${SHIELDS.find(x=>x[0]===s.sh)[1].toLowerCase()}, ${s.d} cm: about ${e.toLocaleString('en-US')} counts per minute, ${e<=BG+5?'background only':e<BG*4?'a little above background':'well above background'}.`},700)}
  function readout(){setTxt(el.cnt,s.shown.toLocaleString('en-US'));const exp=cpm(s.rad,s.sh,s.d);setTxt(el.note,exp<=BG+5?'≈ background only':exp<BG*4?'a little above background':'well above background');
   el.cv.setAttribute('aria-label',`${PNAME[s.rad]}s from the source, ${SHIELDS.find(x=>x[0]===s.sh)[1].toLowerCase()} in between, counter ${s.d} cm away reads about ${exp} counts per minute.`)}
  function step(dt){s.t+=dt;const tr=TRANS[s.rad][s.sh];
@@ -212,11 +214,11 @@ const Shield=(()=>{
   <div class="ctrls" role="group" aria-label="Shield"><span class="lbl">Shield:</span>${SHIELDS.map(([k,t])=>`<button type="button" class="chip" data-sh="${k}">${t}</button>`).join('')}</div>
   <div class="ctrls"><label class="slider">📏 Counter distance <input type="range" min="2" max="40" step="1" data-dist aria-label="Distance from source to counter in centimeters"><output data-dout></output></label>${speedChip()}<button type="button" class="chip" data-snd aria-pressed="${Click.on}">${Click.on?'🔊 Clicks on':'🔇 Clicks off'}</button></div>
   <div class="stage"><canvas width="600" height="320" role="img"></canvas></div>
-  <div class="geiger" role="status"><span>📟 Counter:</span> <b data-cnt>0</b> <span>counts/min</span> <small data-note></small></div>
+  <div class="geiger"><span>📟 Counter:</span> <b data-cnt>0</b> <span>counts/min</span> <small data-note></small><span class="sr" data-say aria-live="polite"></span></div>
   <p class="cap">+ and − marks are ions made along each track (ionizing power). Background radiation alone gives about ${BG} counts/min.</p></div>`;
-  el={root:h,cv:h.querySelector('canvas'),dist:h.querySelector('[data-dist]'),dout:h.querySelector('[data-dout]'),cnt:h.querySelector('[data-cnt]'),note:h.querySelector('[data-note]')};ctx=fitCanvas(el.cv,LW,LH);
+  el={root:h,cv:h.querySelector('canvas'),dist:h.querySelector('[data-dist]'),dout:h.querySelector('[data-dout]'),cnt:h.querySelector('[data-cnt]'),note:h.querySelector('[data-note]'),say:h.querySelector('[data-say]')};ctx=fitCanvas(el.cv,LW,LH);
   h.querySelectorAll('[data-rad]').forEach(b=>b.onclick=()=>set('rad',b.dataset.rad));h.querySelectorAll('[data-sh]').forEach(b=>b.onclick=()=>set('sh',b.dataset.sh));
-  el.dist.oninput=()=>{s.d=+el.dist.value;setTxt(el.dout,s.d+' cm');s.dSeen.push(s.d);s.shown=cpm(s.rad,s.sh,s.d);readout();emit('set:d')};
+  el.dist.oninput=()=>{s.d=+el.dist.value;setTxt(el.dout,s.d+' cm');el.dist.setAttribute('aria-valuetext',s.d+' centimeters');announce();s.dSeen.push(s.d);s.shown=cpm(s.rad,s.sh,s.d);readout();emit('set:d')};
   const snd=h.querySelector('[data-snd]');snd.onclick=()=>{if(!Click.on&&!Click.ensure()){snd.textContent='🔇 No sound on this device';return}Click.on=!Click.on;if(Click.on)Click.ensure();snd.textContent=Click.on?'🔊 Clicks on':'🔇 Clicks off';snd.setAttribute('aria-pressed',Click.on)};
   wireSpeed(h);Object.assign(s,{rad:o.rad||'alpha',sh:o.sh||'none',d:o.d||10,ps:[],ions:[],seen:{},dSeen:[o.d||10]});s.seen[s.rad+':'+s.sh]=1;sync()};
  api.start=()=>loop.start();api.stop=()=>loop.stop();return api})();
@@ -313,7 +315,7 @@ const Power=(()=>{
  function sync(){if(!el.root)return;el.root.querySelectorAll('[data-view]').forEach(b=>{const on=b.dataset.view===s.view;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
   ['fisC','fis2'].forEach(k=>el[k].classList.toggle('hidden',s.view!=='fis'));['fusC','fus2'].forEach(k=>el[k].classList.toggle('hidden',s.view!=='fus'));
   el.root.querySelectorAll('[data-fuel]').forEach(b=>{const on=b.dataset.fuel===s.fuel;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
-  el.rods.value=Math.round(s.rods*100);setTxt(el.rout,Math.round(s.rods*100)+'% in');el.temp.value=s.T;setTxt(el.tout,tempTxt(s.T));read()}
+  el.rods.value=Math.round(s.rods*100);setTxt(el.rout,Math.round(s.rods*100)+'% in');el.rods.setAttribute('aria-valuetext',Math.round(s.rods*100)+' percent in');el.temp.value=s.T;setTxt(el.tout,tempTxt(s.T));el.temp.setAttribute('aria-valuetext',tempTxt(s.T).replace(/[^\w\s.,%-]/g,'').trim());read()}
  function read(){if(!el.root)return;if(s.view==='fis'){const st=s.st,left=st.U.filter(u=>u.on).length;setTxt(el.r1,String(st.fis));setTxt(el.r2,String(st.nu.length));setTxt(el.r3,`${left} of ${st.U.length}`);
    setTxt(el.status,s.fired===0?'Tap 🎯 Fire a neutron':st.nu.length>12?'🔥 Chain reaction growing':st.nu.length>0?'Neutrons flying…':st.fis>=st.U.length*0.35?'Chain reaction ran through the fuel':'Chain died out: neutrons escaped or were absorbed');
    el.cv.setAttribute('aria-label',`Fission: ${st.fis} fissions, ${st.nu.length} neutrons flying, ${left} U-235 nuclei left, control rods ${Math.round(s.rods*100)}% in.`)}
@@ -343,7 +345,7 @@ const Power=(()=>{
    r1:q('[data-r1]'),r2:q('[data-r2]'),r3:q('[data-r3]'),f1:q('[data-f1]'),f2:q('[data-f2]'),status:q('[data-status]')};ctx=fitCanvas(el.cv,LW,LH);
   h.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{s.view=b.dataset.view;sync();emit('view:'+s.view)});
   q('[data-fire]').onclick=fire;h.querySelectorAll('[data-fuel]').forEach(b=>b.onclick=()=>{s.fuel=b.dataset.fuel;reset();emit('fuel')});q('[data-reset]').onclick=()=>{reset();emit('reset')};
-  el.rods.oninput=()=>{s.rods=+el.rods.value/100;s.st.rods=s.rods;setTxt(el.rout,el.rods.value+'% in');emit('rods')};
-  el.temp.oninput=()=>{s.T=+el.temp.value;fusSetT(s.fu,s.T);setTxt(el.tout,tempTxt(s.T));read();emit('temp')};
+  el.rods.oninput=()=>{s.rods=+el.rods.value/100;s.st.rods=s.rods;setTxt(el.rout,el.rods.value+'% in');el.rods.setAttribute('aria-valuetext',el.rods.value+' percent in');emit('rods')};
+  el.temp.oninput=()=>{s.T=+el.temp.value;fusSetT(s.fu,s.T);setTxt(el.tout,tempTxt(s.T));el.temp.setAttribute('aria-valuetext',tempTxt(s.T).replace(/[^\w\s.,%-]/g,'').trim());read();emit('temp')};
   wireSpeed(h);Object.assign(s,{view:o.view||'fis',fuel:o.fuel||'large',rods:o.rods||0,T:o.T||3});reset()};
  api.start=()=>loop.start();api.stop=()=>loop.stop();return api})();

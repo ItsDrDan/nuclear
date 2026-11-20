@@ -41,7 +41,7 @@ details.howto ul{margin:0 18px 14px;padding-left:22px;line-height:1.6}
 .btn{border:0;border-radius:14px;padding:12px 18px;font-weight:900;font-size:17px;cursor:pointer;min-height:48px;transition:transform .08s}
 .btn:active:not(:disabled){transform:translateY(2px)}.btn:disabled{opacity:.55;cursor:default}
 .dark{background:linear-gradient(180deg,#2f4650,#22343c);color:#fff;box-shadow:0 4px 0 #142128}
-.check{background:linear-gradient(180deg,#5cb2e6,#3b8ccb);color:#fff;box-shadow:0 4px 0 #2d73a8}
+.check{background:linear-gradient(180deg,#2b78b5,#1f5f94);color:#fff;box-shadow:0 4px 0 #184d78}
 .hint{background:#fff3c9;border:2px solid #efd27a;box-shadow:0 3px 0 #e0bd55}
 .show{background:#efe8fb;border:2px solid #cdbbec;box-shadow:0 3px 0 #b49ddc}
 .prompt{font-size:20px;font-weight:800;margin:14px 0 8px}
@@ -56,7 +56,7 @@ details.howto ul{margin:0 18px 14px;padding-left:22px;line-height:1.6}
 .qsum{text-align:center}.qsum .big{font-size:44px;font-weight:900;margin:6px 0}.qsum table{margin:10px auto;border-collapse:collapse;text-align:left;font-size:15.5px}.qsum td{padding:6px 10px;border-top:1px solid #eee}.qsum td:last-child{white-space:nowrap}#practice.quizdone .btnrow{display:none}#practice.quizpick #newBtn{display:none}
 .qpick{display:grid;gap:12px;margin:8px 0}.pickcard{display:block;text-align:left;border:2px solid #e3d7c3;border-bottom-width:5px;border-radius:16px;background:#fffdf8;padding:14px 16px;cursor:pointer;font:inherit;color:inherit;min-height:44px}
 .pickcard b{display:block;font-size:19px;margin-bottom:4px}.pickcard span{font-size:15px;color:var(--muted);line-height:1.45}.pickcard:active{transform:translateY(2px)}.pickcard[data-kind=exam]{border-color:#d9c3ea;background:#fbf8ff}
-.qprog i.did{background:#8aa3b5}.fb.saved{border-left:7px solid #8aa3b5;background:#f1f5f8;padding:12px 14px}
+.qprog i.did{background:#8aa3b5}#modeTitle:focus{outline:none}#modeTitle:focus-visible{outline:3px solid #2b78b5;outline-offset:3px;border-radius:6px}.fb.saved{border-left:7px solid #8aa3b5;background:#f1f5f8;padding:12px 14px}
 .review{text-align:left;margin-top:6px}.rv{border:2px solid #e6e0d2;border-radius:12px;margin:6px 0;padding:6px 10px;background:#fff}.rv.no{border-color:#f0c3be}.rv summary{cursor:pointer;font-weight:800;min-height:32px}.rvp{border-top:1px dashed #e6e0d2;margin-top:6px;padding-top:4px}.rvp p{margin:4px 0}
 .goal{background:#fff8e6;border:2px dashed #f0cf86;border-radius:12px;padding:8px 10px;margin:0 0 8px;font-size:14.5px;line-height:1.45}.goal.done{background:#e9f7ee;border:2px solid #8fcf9f}
 .plan{display:grid;gap:8px;margin-top:10px;text-align:left}.plan .item{background:#fff8e6;border:1px solid #f0dfae;border-radius:12px;padding:10px 12px}.plan .btn{min-height:44px;font-size:15px;padding:8px 14px;margin:6px 8px 0 0}
@@ -66,10 +66,10 @@ details.howto ul{margin:0 18px 14px;padding-left:22px;line-height:1.6}
 .qbox{background:radial-gradient(circle at 50% 0,#f7fbff,#fff 70%);border:2px solid #e1ebf3;border-radius:18px;padding:14px;margin:8px 0;font-size:18px;text-align:center;overflow-x:auto}
 .options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .opt{display:flex;gap:10px;align-items:center;text-align:left;background:#fff;border:2px solid #dcd6c8;border-bottom-width:4px;border-radius:16px;padding:10px 14px;min-height:56px;font-size:17px;font-weight:700;cursor:pointer}
-.opt .L{flex:0 0 28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#e6f2ff;color:#3b82b4;font-size:14px;font-weight:900}
-.opt.sel{border-color:var(--blue);background:#eaf5fd}.opt.sel .L{background:#4a9fd6;color:#fff}
-.opt.right{border-color:#4fa36a;background:#e8f7ec}.opt.right .L{background:#4fa36a;color:#fff}
-.opt.wrong{border-color:#d9776f;background:#fdeeed}.opt.wrong .L{background:#d9776f;color:#fff}
+.opt .L{flex:0 0 28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#e6f2ff;color:#2a6a99;font-size:14px;font-weight:900}
+.opt.sel{border-color:var(--blue);background:#eaf5fd}.opt.sel .L{background:#2f78b0;color:#fff}
+.opt.right{border-color:#4fa36a;background:#e8f7ec}.opt.right .L{background:#2e7d4f;color:#fff}
+.opt.wrong{border-color:#d9776f;background:#fdeeed}.opt.wrong .L{background:#b5473f;color:#fff}
 .opt .nuc{font-size:22px}
 .tip{font-size:13px;color:var(--muted);margin:4px 2px}
 .btnrow{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:10px;margin-top:14px}
@@ -144,7 +144,7 @@ details.howto ul{margin:0 18px 14px;padding-left:22px;line-height:1.6}
 .bdg{border:2px dashed #c3ccd4;border-radius:12px;padding:7px 9px;font-size:12.5px;color:#4c5a65;background:#fff;display:grid;grid-template-columns:48px 1fr;gap:8px;align-items:center}.bdg img{width:48px;height:48px;display:block;filter:grayscale(1) opacity(.45)}.bdg.got img{filter:none}.bdg .e{font-size:26px;text-align:center;filter:grayscale(1) opacity(.5)}.bdg.got .e{filter:none}
 .bdg:not(.got) b:after{content:' (not yet)';font-weight:700;font-size:11px;color:#5c6a75}.bdg.got{border:2px solid #f0cf86;background:#fff8e6}.bdg b{display:block;font-size:13.5px}
 .vidcard{background:linear-gradient(120deg,#fff7ef,#fdf0f4);border:1px solid #f1d9cf;border-radius:14px;padding:9px 12px;margin-bottom:10px}
-.vidcard small{display:block;font-size:11.5px;font-weight:900;text-transform:uppercase;color:#b0544a}
+.vidcard small{display:block;font-size:11.5px;font-weight:900;text-transform:uppercase;color:#a0453c}
 .vwrap{position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#222}.vwrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,30px);opacity:0;background:#fff8e6;border:3px solid #f0cf86;border-radius:16px;padding:12px 18px;font-weight:800;pointer-events:none;transition:.3s;z-index:50}.toast.on{opacity:1;transform:translate(-50%,0)}
 .confetti{position:fixed;top:-20px;width:10px;height:14px;border-radius:2px;animation:fall 3s linear forwards;z-index:40;pointer-events:none}@keyframes fall{to{transform:translateY(105vh) rotate(720deg)}}
@@ -178,7 +178,7 @@ details.howto ul{margin:0 18px 14px;padding-left:22px;line-height:1.6}
 <nav class="modes" id="modes" aria-label="Choose a mode"></nav>
 <div class="main">
 <section class="card" id="practice">
- <div class="toprow"><h2 id="modeTitle">Mode</h2><div class="stats">
+ <div class="toprow"><h2 id="modeTitle" tabindex="-1">Mode</h2><div class="stats">
   <span class="stat s1"><b id="nCorrect">0</b><small>✅ Correct</small></span><span class="stat s2"><b id="nStreak">0</b><small>🔥 Streak</small></span><span class="stat s3"><b id="nAssist">0</b><small>👀 Assisted</small></span>
   <button class="btn dark" id="newBtn">New Question ↻</button></div></div>
  <div id="qArea"></div>
@@ -369,7 +369,9 @@ const Shield=(()=>{
  function set(k,v){s[k]=v;s.ps=[];s.seen[s.rad+':'+s.sh]=1;sync();emit('set:'+k)}
  function sync(){if(!el.cv)return;el.root.querySelectorAll('[data-rad]').forEach(b=>{const on=b.dataset.rad===s.rad;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
   el.root.querySelectorAll('[data-sh]').forEach(b=>{const on=b.dataset.sh===s.sh;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
-  el.dist.value=s.d;setTxt(el.dout,s.d+' cm');s.shown=cpm(s.rad,s.sh,s.d);readout()}
+  el.dist.value=s.d;setTxt(el.dout,s.d+' cm');el.dist.setAttribute('aria-valuetext',s.d+' centimeters');s.shown=cpm(s.rad,s.sh,s.d);readout();announce()}
+ /* screen readers hear one settled reading after a change, not the count that jitters twice a second */
+ function announce(){clearTimeout(announce.t);announce.t=setTimeout(()=>{if(!el.say)return;const e=cpm(s.rad,s.sh,s.d);el.say.textContent=`${PNAME[s.rad]}s, ${SHIELDS.find(x=>x[0]===s.sh)[1].toLowerCase()}, ${s.d} cm: about ${e.toLocaleString('en-US')} counts per minute, ${e<=BG+5?'background only':e<BG*4?'a little above background':'well above background'}.`},700)}
  function readout(){setTxt(el.cnt,s.shown.toLocaleString('en-US'));const exp=cpm(s.rad,s.sh,s.d);setTxt(el.note,exp<=BG+5?'≈ background only':exp<BG*4?'a little above background':'well above background');
   el.cv.setAttribute('aria-label',`${PNAME[s.rad]}s from the source, ${SHIELDS.find(x=>x[0]===s.sh)[1].toLowerCase()} in between, counter ${s.d} cm away reads about ${exp} counts per minute.`)}
  function step(dt){s.t+=dt;const tr=TRANS[s.rad][s.sh];
@@ -406,11 +408,11 @@ const Shield=(()=>{
   <div class="ctrls" role="group" aria-label="Shield"><span class="lbl">Shield:</span>${SHIELDS.map(([k,t])=>`<button type="button" class="chip" data-sh="${k}">${t}</button>`).join('')}</div>
   <div class="ctrls"><label class="slider">📏 Counter distance <input type="range" min="2" max="40" step="1" data-dist aria-label="Distance from source to counter in centimeters"><output data-dout></output></label>${speedChip()}<button type="button" class="chip" data-snd aria-pressed="${Click.on}">${Click.on?'🔊 Clicks on':'🔇 Clicks off'}</button></div>
   <div class="stage"><canvas width="600" height="320" role="img"></canvas></div>
-  <div class="geiger" role="status"><span>📟 Counter:</span> <b data-cnt>0</b> <span>counts/min</span> <small data-note></small></div>
+  <div class="geiger"><span>📟 Counter:</span> <b data-cnt>0</b> <span>counts/min</span> <small data-note></small><span class="sr" data-say aria-live="polite"></span></div>
   <p class="cap">+ and − marks are ions made along each track (ionizing power). Background radiation alone gives about ${BG} counts/min.</p></div>`;
-  el={root:h,cv:h.querySelector('canvas'),dist:h.querySelector('[data-dist]'),dout:h.querySelector('[data-dout]'),cnt:h.querySelector('[data-cnt]'),note:h.querySelector('[data-note]')};ctx=fitCanvas(el.cv,LW,LH);
+  el={root:h,cv:h.querySelector('canvas'),dist:h.querySelector('[data-dist]'),dout:h.querySelector('[data-dout]'),cnt:h.querySelector('[data-cnt]'),note:h.querySelector('[data-note]'),say:h.querySelector('[data-say]')};ctx=fitCanvas(el.cv,LW,LH);
   h.querySelectorAll('[data-rad]').forEach(b=>b.onclick=()=>set('rad',b.dataset.rad));h.querySelectorAll('[data-sh]').forEach(b=>b.onclick=()=>set('sh',b.dataset.sh));
-  el.dist.oninput=()=>{s.d=+el.dist.value;setTxt(el.dout,s.d+' cm');s.dSeen.push(s.d);s.shown=cpm(s.rad,s.sh,s.d);readout();emit('set:d')};
+  el.dist.oninput=()=>{s.d=+el.dist.value;setTxt(el.dout,s.d+' cm');el.dist.setAttribute('aria-valuetext',s.d+' centimeters');announce();s.dSeen.push(s.d);s.shown=cpm(s.rad,s.sh,s.d);readout();emit('set:d')};
   const snd=h.querySelector('[data-snd]');snd.onclick=()=>{if(!Click.on&&!Click.ensure()){snd.textContent='🔇 No sound on this device';return}Click.on=!Click.on;if(Click.on)Click.ensure();snd.textContent=Click.on?'🔊 Clicks on':'🔇 Clicks off';snd.setAttribute('aria-pressed',Click.on)};
   wireSpeed(h);Object.assign(s,{rad:o.rad||'alpha',sh:o.sh||'none',d:o.d||10,ps:[],ions:[],seen:{},dSeen:[o.d||10]});s.seen[s.rad+':'+s.sh]=1;sync()};
  api.start=()=>loop.start();api.stop=()=>loop.stop();return api})();
@@ -507,7 +509,7 @@ const Power=(()=>{
  function sync(){if(!el.root)return;el.root.querySelectorAll('[data-view]').forEach(b=>{const on=b.dataset.view===s.view;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
   ['fisC','fis2'].forEach(k=>el[k].classList.toggle('hidden',s.view!=='fis'));['fusC','fus2'].forEach(k=>el[k].classList.toggle('hidden',s.view!=='fus'));
   el.root.querySelectorAll('[data-fuel]').forEach(b=>{const on=b.dataset.fuel===s.fuel;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
-  el.rods.value=Math.round(s.rods*100);setTxt(el.rout,Math.round(s.rods*100)+'% in');el.temp.value=s.T;setTxt(el.tout,tempTxt(s.T));read()}
+  el.rods.value=Math.round(s.rods*100);setTxt(el.rout,Math.round(s.rods*100)+'% in');el.rods.setAttribute('aria-valuetext',Math.round(s.rods*100)+' percent in');el.temp.value=s.T;setTxt(el.tout,tempTxt(s.T));el.temp.setAttribute('aria-valuetext',tempTxt(s.T).replace(/[^\w\s.,%-]/g,'').trim());read()}
  function read(){if(!el.root)return;if(s.view==='fis'){const st=s.st,left=st.U.filter(u=>u.on).length;setTxt(el.r1,String(st.fis));setTxt(el.r2,String(st.nu.length));setTxt(el.r3,`${left} of ${st.U.length}`);
    setTxt(el.status,s.fired===0?'Tap 🎯 Fire a neutron':st.nu.length>12?'🔥 Chain reaction growing':st.nu.length>0?'Neutrons flying…':st.fis>=st.U.length*0.35?'Chain reaction ran through the fuel':'Chain died out: neutrons escaped or were absorbed');
    el.cv.setAttribute('aria-label',`Fission: ${st.fis} fissions, ${st.nu.length} neutrons flying, ${left} U-235 nuclei left, control rods ${Math.round(s.rods*100)}% in.`)}
@@ -537,8 +539,8 @@ const Power=(()=>{
    r1:q('[data-r1]'),r2:q('[data-r2]'),r3:q('[data-r3]'),f1:q('[data-f1]'),f2:q('[data-f2]'),status:q('[data-status]')};ctx=fitCanvas(el.cv,LW,LH);
   h.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{s.view=b.dataset.view;sync();emit('view:'+s.view)});
   q('[data-fire]').onclick=fire;h.querySelectorAll('[data-fuel]').forEach(b=>b.onclick=()=>{s.fuel=b.dataset.fuel;reset();emit('fuel')});q('[data-reset]').onclick=()=>{reset();emit('reset')};
-  el.rods.oninput=()=>{s.rods=+el.rods.value/100;s.st.rods=s.rods;setTxt(el.rout,el.rods.value+'% in');emit('rods')};
-  el.temp.oninput=()=>{s.T=+el.temp.value;fusSetT(s.fu,s.T);setTxt(el.tout,tempTxt(s.T));read();emit('temp')};
+  el.rods.oninput=()=>{s.rods=+el.rods.value/100;s.st.rods=s.rods;setTxt(el.rout,el.rods.value+'% in');el.rods.setAttribute('aria-valuetext',el.rods.value+' percent in');emit('rods')};
+  el.temp.oninput=()=>{s.T=+el.temp.value;fusSetT(s.fu,s.T);setTxt(el.tout,tempTxt(s.T));el.temp.setAttribute('aria-valuetext',tempTxt(s.T).replace(/[^\w\s.,%-]/g,'').trim());read();emit('temp')};
   wireSpeed(h);Object.assign(s,{view:o.view||'fis',fuel:o.fuel||'large',rods:o.rods||0,T:o.T||3});reset()};
  api.start=()=>loop.start();api.stop=()=>loop.stop();return api})();
 
@@ -1049,7 +1051,7 @@ function renderJ(){const l=Math.floor(J.xp/100)+1,i=J.xp%100;$('jChip').textCont
  renderFix();
  $('badges').innerHTML=BADGES.map(([id,e,t,d])=>`<div class="bdg ${J.badges[id]?'got':''}"><img src="assets/ach-${id}.webp" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'e',textContent:'${e}'}))"><span><b>${t}</b>${d}</span></div>`).join('')}
 /* ---- Fix my mistakes: count each kind of slip on this device; offer 5 targeted questions once a slip repeats ---- */
-function slip(code){if(!code||!SLIPS[code])return '';const q=state.q||{};q.slipped=q.slipped||{};if(q.slipped[code])return '';q.slipped[code]=1;J.slips=J.slips||{};J.slips[code]=(J.slips[code]||0)+1;try{localStorage.setItem(JK,JSON.stringify(J))}catch(e){}renderFix();
+function slip(code){if(!code||!SLIPS[code])return '';const q=state.q||{};if(!q.firstSlip)q.firstSlip=code;q.slipped=q.slipped||{};if(q.slipped[code])return '';q.slipped[code]=1;J.slips=J.slips||{};J.slips[code]=(J.slips[code]||0)+1;try{localStorage.setItem(JK,JSON.stringify(J))}catch(e){}renderFix();
  const n=J.slips[code];if(n<2||(state.fix&&state.fix.code===code)||state.mode==='quiz')return '';
  return `<div class="fixnudge">🔧 That is ${n} times for: <b>${SLIPS[code][0]}</b>. <br><button type="button" class="btn hint" data-fix="${code}">Practice this (5 questions)</button></div>`}
 function renderFix(){const el=$('fixList');if(!el)return;const top=Object.entries(J.slips||{}).filter(([k,v])=>v>0&&SLIPS[k]).sort((a,b)=>b[1]-a[1]).slice(0,3);
@@ -1060,7 +1062,11 @@ function award(assisted){const before=Math.floor(J.xp/100);if(assisted)J.xp+=2;e
  earn();if(Math.floor(J.xp/100)>before)toast('Level up!');try{localStorage.setItem(JK,JSON.stringify(J))}catch(e){}renderJ()}
 function stats(){[['nCorrect',state.correct],['nStreak',state.streak],['nAssist',state.assist]].forEach(([id,v])=>{const e=$(id);if(e.textContent!==String(v)){e.textContent=v;const p=e.parentElement;p.classList.remove('pop');void p.offsetWidth;p.classList.add('pop')}})}
 function fb(k,h){$('fb').className='fb '+k;$('fb').innerHTML=h}
-function log(ok){if(state.logged)return;state.logged=true;try{window.ddTrack&&ddTrack({game:'nuclear',course:'3A',mode:MODES.find(m=>m.id===state.mode).title,topic:state.q.topic||state.q.video||'',correct:!!ok})}catch(e){}}
+/* anonymous stats (games/track.js): first-try right/wrong per topic, the first slip (prefixed nuc- so the class report can find it),
+   and for Skill Check runs a random run code and seconds, so report.html can score each Exam rehearsal. No typed answers are sent. */
+function log(ok){if(state.logged)return;state.logged=true;const q=state.q||{},Q=state.mode==='quiz'&&state.quiz?state.quiz:null;
+ try{window.ddTrack&&ddTrack({game:'nuclear',course:'3A',mode:Q?(Q.kind==='exam'?'Exam rehearsal':'Practice run'):state.fix?'Fix my mistakes':MODES.find(m=>m.id===state.mode).title,topic:q.topic||q.video||'',correct:!!ok,
+  slip:q.firstSlip?'nuc-'+q.firstSlip:'',item:'nuc-'+(q.topic||'other'),ex:Q?Q.ex:'',sec:q.t0?(Date.now()-q.t0)/1000:''})}catch(e){}}
 function buildModes(){$('modes').innerHTML=MODES.map(m=>`<button type="button" class="mode ${m.id===state.mode?'on':''}" aria-pressed="${m.id===state.mode}" data-m="${m.id}" style="--mb:${m.mb};--ma:${m.ma}"><span class="ic art" aria-hidden="true"><img src="assets/mode-${m.id}.webp" alt="" onerror="this.parentNode.classList.remove('art');this.parentNode.textContent='${m.icon}'"></span><b>${m.title}</b><small>${m.short}</small></button>`).join('');
  $('modes').querySelectorAll('.mode').forEach(b=>b.onclick=()=>{state.fix=null;state.mode=b.dataset.m;ui.mode=state.mode;saveUI();buildModes();next()})}
 /* labs */
@@ -1072,12 +1078,12 @@ function taskEvent(L){const t=state.q&&state.q.task;if(!t||state.taskOk||state.d
 function taskPoll(L){clearTimeout(taskPoll.t);if(!state.q||!state.q.task||state.taskOk)return;taskEvent(L);if(!state.taskOk)taskPoll.t=setTimeout(()=>taskPoll(L),300)}
 /* Skill Check: the student picks a Practice run (hints, Step Map, retries; first tries score) or an Exam rehearsal (one try, no hints, clock, answers at the end) */
 const exam=()=>state.mode==='quiz'&&!!state.quiz&&state.quiz.kind==='exam';
-function startQuiz(kind){clearInterval(startQuiz.tk);state.quiz={kind,plan:(kind==='exam'?EXAM_PLAN:QUIZ_PLAN).slice(),i:0,res:[],over:false,t0:Date.now()};
+function startQuiz(kind){clearInterval(startQuiz.tk);state.quiz={kind,plan:(kind==='exam'?EXAM_PLAN:QUIZ_PLAN).slice(),i:0,res:[],over:false,t0:Date.now(),ex:Math.random().toString(36).slice(2,10)};
  if(kind==='exam')startQuiz.tk=setInterval(()=>{const c=$('qclock');if(c&&state.quiz&&!state.quiz.over)c.textContent=mmss(Math.round((Date.now()-state.quiz.t0)/1000))},1000)}
 function quizPick(){stopLabs();clearInterval(startQuiz.tk);state.quiz=null;state.q={};state.done=true;
  $('practice').classList.add('quizdone','quizpick');$('modeTitle').textContent='Skill Check: choose one';fb('','');$('hintBox').className='hintbox';
  $('qArea').innerHTML=`<div class="qpick"><button type="button" class="pickcard" data-kind="practice"><b>🎯 Practice run</b><span>${QUIZ_PLAN.length} questions, one per topic. 💡 Hints, 🧭 Step Map and retries are on. Your score counts first tries.</span></button><button type="button" class="pickcard" data-kind="exam"><b>📝 Exam rehearsal</b><span>${EXAM_PLAN.length} questions in test format: one try each, no hints, a running clock. You see every answer and explanation at the end.</span></button></div>`;
- $('qArea').querySelectorAll('[data-kind]').forEach(b=>b.onclick=()=>{startQuiz(b.dataset.kind);next();$('practice').scrollIntoView({behavior:'smooth',block:'start'})});
+ $('qArea').querySelectorAll('[data-kind]').forEach(b=>b.onclick=()=>{startQuiz(b.dataset.kind);next();$('practice').scrollIntoView({behavior:'smooth',block:'start'});$('modeTitle').focus({preventScroll:true})});
  ['checkBtn','hintBtn','showBtn'].forEach(id=>$(id).disabled=true);video();stats()}
 function chainParts(q){const a=[];for(let p=q;p;p=p.prev)a.unshift({prompt:p.prompt,ans:ansText(p),why:p.why,yours:p.yours||''});return a}
 function yours(q){if(q.type==='num'){const i=$('numIn');return i&&i.value.trim()?esc(i.value.trim())+(q.unit?' '+q.unit:''):''}
@@ -1097,7 +1103,7 @@ function quizSummary(){const Q=state.quiz,n=Q.res.filter(r=>r.ok).length,tot=Q.r
  ['checkBtn','hintBtn','showBtn'].forEach(id=>$(id).disabled=true);fb('','');$('newBtn').textContent='New Skill Check ↻';$('practice').classList.add('quizdone');$('practice').classList.remove('quizmode');$('modeTitle').textContent=(X?'Exam rehearsal':'Practice run')+' results';
  $('qArea').querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{state.mode=TOPICS[b.dataset.go][1];ui.mode=state.mode;saveUI();buildModes();next();$('practice').scrollIntoView({behavior:'smooth'})});
  $('qArea').querySelectorAll('[data-vid]').forEach(b=>b.onclick=()=>{state.q={video:TOPICS[b.dataset.vid][2]};video();openVideo()});
- $('againBtn').onclick=()=>{startQuiz(Q.kind);next()};$('otherBtn').onclick=()=>{startQuiz(X?'practice':'exam');next()};$('againBtn').focus({preventScroll:true})}
+ $('againBtn').onclick=()=>{startQuiz(Q.kind);next();$('modeTitle').focus()};$('otherBtn').onclick=()=>{startQuiz(X?'practice':'exam');next();$('modeTitle').focus()};$('againBtn').focus({preventScroll:true})}
 function next(){clearTimeout(taskPoll.t);
  $('practice').classList.remove('quizdone','quizpick');$('newBtn').textContent='New Question ↻';
  if(state.mode==='quiz'){if(!state.quiz||state.quiz.over){$('practice').classList.remove('quizmode');return quizPick()}else if(state.done&&state.q&&state.q.qi===state.quiz.i)state.quiz.i++;
@@ -1105,7 +1111,7 @@ function next(){clearTimeout(taskPoll.t);
  $('practice').classList.toggle('quizmode',exam());
  if(state.fix&&state.mode==='quiz')state.fix=null;
  if(state.fix){if(state.done&&state.q&&state.q.fixQ){state.fix.left--;state.fix.n++}if(state.fix.left<=0){toast('🔧 Practice set done! Check the Journey panel to see your slips go down.');state.fix=null}}
- const q=state.fix?Object.assign(SLIPS[state.fix.code][1](),{fixQ:1}):GEN[state.mode]();if(state.mode==='quiz')q.qi=state.quiz.i;state.q=q;state.sel=null;state.done=false;state.logged=false;state.chainAssist=false;state.chainMiss=false;
+ const q=state.fix?Object.assign(SLIPS[state.fix.code][1](),{fixQ:1}):GEN[state.mode]();if(state.mode==='quiz')q.qi=state.quiz.i;state.q=q;q.t0=Date.now();state.sel=null;state.done=false;state.logged=false;state.chainAssist=false;state.chainMiss=false;
  $('modeTitle').textContent=state.fix?`🔧 Fix: ${state.fix.n+1} of 5`:(state.mode==='quiz'?`${exam()?'Exam rehearsal':'Practice run'} · ${state.quiz.i+1} of ${state.quiz.plan.length}`:MODES.find(m=>m.id===state.mode).title);
  $('hintBox').className='hintbox';fb('','');
  const P=LAB_PICK[state.mode],cur=q.lab&&q.lab.sys;
@@ -1167,7 +1173,7 @@ function finish(revealed,quizWrong){const X=exam();state.done=true;['checkBtn','
  if(q.then&&(!quizWrong||X)){const n=q.then;n.qi=q.qi;n.topic=n.topic||q.topic;n.prev=q;n.fixQ=q.fixQ;if(revealed)state.chainAssist=true;if(quizWrong)state.chainMiss=true;
   $('qArea').querySelectorAll('.opt').forEach(b=>{b.disabled=true;if(!X&&q.options&&q.options[+b.dataset.i]===q.answer)b.classList.add('right')});
   ['numIn','smap','smapBody','nucBox','ptBtn','ptBox','ptIn','ptOut','ptUse'].forEach(id=>{const e=$(id);if(e)e.removeAttribute('id')});/* the next part brings its own */
-  state.q=n;state.sel=null;state.done=false;state.logged=false;['checkBtn','hintBtn','showBtn'].forEach(id=>$(id).disabled=false);
+  state.q=n;n.t0=Date.now();state.sel=null;state.done=false;state.logged=false;['checkBtn','hintBtn','showBtn'].forEach(id=>$(id).disabled=false);
   const div=document.createElement('div');div.innerHTML=`<p class="prompt"><b>${n.label||'Step 2 of 2:'}</b> ${n.prompt}</p>`+bodyHTML(n);$('qArea').appendChild(div);wireBody(n);
   const head=revealed?`👀 <b>${ansText(q)}</b><br>${q.why}`:(q.type==='nuc'?'✅ Equation balanced! '+(q.why1||''):'✅ Right! '+q.why);
   if(X)fb('saved',`📝 Answer saved. On to ${n.label?n.label.replace(':',''):'step 2'} ↓`);else fb('good',head+`<br>${n.label?'On to '+n.label.replace(':','')+' ↓':'Now name the kind of reaction ↓'}`);$('hintBox').className='hintbox';video();
