@@ -1,6 +1,6 @@
 # Nuclear Glow Up! (CHEM 3A Chapter 14: Radioactivity and Nuclear Chemistry)
 
-Study game for CHEM 3A, matched to Lecture 30 (Nuclear Chemistry), the Chapter 14 learning objectives in Canvas, the Week 17 MyOpenMath homework, and the CHEM 3A textbook's Chapter 14. Live at https://itsdrdan.github.io/nuclear/ (after it is pushed).
+Study game for CHEM 3A, matched to Lecture 30 (Nuclear Chemistry), the Chapter 14 learning objectives in Canvas, the Week 17 MyOpenMath homework, and the CHEM 3A textbook's Chapter 14. Live at https://itsdrdan.github.io/nuclear/.
 
 Current version: 1
 
