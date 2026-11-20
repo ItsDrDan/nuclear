@@ -2,7 +2,7 @@
 
 Study game for CHEM 3A, matched to Lecture 30 (Nuclear Chemistry), the Chapter 14 learning objectives in Canvas, the Week 17 MyOpenMath homework, and the CHEM 3A textbook's Chapter 14. Live at https://itsdrdan.github.io/nuclear/.
 
-Current version: 1.5
+Current version: 1.6
 
 - `index.html`: the whole game (standalone). Loads the brand kit (`games/brand/itsdrdan.css`, `embed.js`), `chemparse.v2.js` and `games/track.js` for anonymous stats.
 - Modes:
@@ -15,7 +15,9 @@ Current version: 1.5
   - 🩺 Patient Cases (v1.3): four linked-part cases (story → decay equation → activity left → protection → what it means): Mateo's V/Q lung scan with Tc-99m (from the textbook's Chapter 14 opener), I-131 thyroid treatment, an F-18 PET scan, and Ir-192 brachytherapy. A revealed part makes the whole case assisted.
   - 🔧 Fix my mistakes (v1.3): the game counts each kind of slip once per question on this device (beta particle written as +1, swapped numbers, kept the old symbol, divided by 2n, stopped at n, sig figs, …). After a slip repeats, it offers a 5-question practice set aimed at that slip; the Chemistry Journey panel lists the top three. Each correct practice answer lowers the count.
   - 🔊 Geiger clicks (v1.3): Shield Lab sound toggle, off by default; the click rate follows the counter (capped so very high counts buzz).
-  - 🎯 Skill Check: 10 questions across 10 topics, one try each, then a study plan.
+  - 🎯 Skill Check (v1.6): the student picks a 🎯 Practice run (10 questions, one per topic; hints, Step Map and retries on; first tries score) or a 📝 Exam rehearsal (15 questions in test format: one try each, no hints, a running clock, no right/wrong until the end, then every answer with its explanation). Both end with a study plan.
+  - ⛓️ Chain Walk (v1.6): in the Decay Lab (U-238 and Ra-226), walk the nucleus to lead-206 with α and β⁻ (↶ Undo, zoomed band chart, a coach box), then count the α and β⁻ decays. Typed decay-series questions (U-238, U-235, Th-232, Ra-226, Rn-222) in Balance It! and the Exam rehearsal.
+  - 📏 Dose & Units (v1.6): typed problems in Radiation & You with Step Maps: mCi ↔ MBq, mSv → mrem, Gy ↔ rad, pCi → Bq (radon), dose by body weight in pounds, volume to draw from a vial, percent of the worker dose limit (textbook 14.9 values: 1 Ci = 3.7 × 10¹⁰ Bq, 2.2046 lb/kg).
 - Deep links: `?mode=decay|balance|shield|half|power|ideas|quiz`, and `&sys=<sample>` for the Decay Lab (`u238 ra226 am241 c14 i131 co60 f18 i125 tc99m`) or Half-Life Lab (`i131 tc99m c14 co60 ir192 rn222 f18`), e.g. `?mode=decay&sys=c14`.
 - Source: edit `tools/page-src.html` (page, questions, UI) and `tools/engine-src.js` (nuclear data and the four labs), then `node tools/build.js` to rebuild `index.html`.
 - Tests: `node tools/check.js` (≈35,000 checks: every generated question has its answer among the choices and a reason for each wrong choice; every nuclear equation balances with real element symbols; numeric answers pass their own sig-fig rule; lecture-slide and MyOpenMath values; the fission lab sustains a chain with large fuel, fizzles with small fuel and stops with the rods in; fusion only when hot).

@@ -79,16 +79,17 @@ const DL_SYS=[
  ['f18','F-18',N(18,9),'Too few neutrons: positron emission'],['i125','I-125',N(125,53),'Too few neutrons: electron capture'],['tc99m','Tc-99m',N(99,43,1),'Excited (m): gives off a gamma ray']];
 const DSYM={alpha:'α',beta:'β⁻',positron:'β⁺',ec:'EC',gamma:'γ'};
 const Decay=(()=>{
- const s={sys:'u238',cur:null,start:null,hist:[],busy:0,fx:[],t:0,flash:0,jig:0,last:null};let el={},ctx=null,nuc=[],R=0;
+ const s={sys:'u238',cur:null,start:null,hist:[],busy:0,fx:[],t:0,flash:0,jig:0,last:null,goal:null};let el={},ctx=null,nuc=[],R=0;
  function layout(x){const A=x.A,rb=Math.max(4.4,Math.min(12,78/Math.sqrt(A)));R=rb*Math.sqrt(A)*1.02;const r=rng(A*131+x.Z*7);nuc=[];
   for(let i=0;i<A;i++){const a=i*2.39996,d=rb*Math.sqrt(i+0.5)*1.02;nuc.push({x:Math.cos(a)*d,y:Math.sin(a)*d,p:false,rb,ph:r()*6.28})}
   const idx=nuc.map((_,i)=>i).sort(()=>r()-0.5);for(let i=0;i<x.Z;i++)nuc[idx[i]].p=true}
  function load(id){const d=DL_SYS.find(q=>q[0]===id)||DL_SYS[0];s.sys=d[0];s.cur=Object.assign({},d[2]);s.start=Object.assign({},d[2]);s.hist=[];s.fx=[];s.busy=0;s.last=null;layout(s.cur);s.jig=s.cur.m?1:0;paint()}
  function fire(mode){if(s.busy>0||!s.cur)return;const p=s.cur;
+  if(s.goal&&mode!=='alpha'&&mode!=='beta'){say('This decay series uses only α and β⁻.');return}
   if(mode==='gamma'&&!p.m){say('Only an excited nucleus (marked m) gives off a gamma ray by itself. Try another button.');return}
   if((mode==='positron'||mode==='ec')&&p.Z<2){say('Hydrogen has only 1 proton: it cannot lose one.');return}
   if(mode==='alpha'&&(p.A<8||p.Z<3)){say('This nucleus is too small for alpha decay.');return}
-  if(s.hist.length>=8){say('That is enough decays for one sample. Tap ↺ Start over.');return}
+  if(s.hist.length>=(s.goal?24:8)){say('That is enough decays for one sample. Tap ↺ Start over.');return}
   const d=decayOf(p,mode);s.busy=1;
   const out=[...nuc.keys()].sort((a,b)=>Math.hypot(nuc[b].x,nuc[b].y)-Math.hypot(nuc[a].x,nuc[a].y));
   if(mode==='alpha'){const take=out.filter(i=>nuc[i].p).slice(0,2).concat(out.filter(i=>!nuc[i].p).slice(0,2));const ang=Math.atan2(nuc[take[0]].y,nuc[take[0]].x);
@@ -96,16 +97,23 @@ const Decay=(()=>{
   else if(mode==='beta'||mode==='positron'||mode==='ec'){const want=mode!=='beta';const cand=nuc.filter(q=>q.p===want);const q=cand[Math.floor(cand.length*0.3)]||cand[0];if(q){q.p=!want;q.fl=1}
    const ang=Math.random()*6.28;if(mode==='ec')s.fx.push({k:'ec',ang,t:0});else s.fx.push({k:mode,x:q?q.x:0,y:q?q.y:0,vx:Math.cos(ang)*260,vy:Math.sin(ang)*260,t:0})}
   else{s.fx.push({k:'gamma',ang:Math.random()*6.28,t:0});s.jig=0}
-  const eq=d.side==='L'?{L:[{x:p},{x:d.part}],R:[{x:d.prod}]}:{L:[{x:p}],R:[{x:d.prod},{x:d.part}]};
+  const eq=eqOf(p,d);
   s.last={mode,eq,from:p};s.hist.push(mode);s.cur=d.prod;s.flash=1;paint();emit('decay:'+mode)}
+ function eqOf(p,d){return d.side==='L'?{L:[{x:p},{x:d.part}],R:[{x:d.prod}]}:{L:[{x:p}],R:[{x:d.prod},{x:d.part}]}}
+ /* Chain Walk: ↶ Undo replays the chain without its last step */
+ function undo(){if(!s.hist.length||s.busy>0)return;s.hist.pop();let x=s.start;s.last=null;s.hist.forEach(m=>{const d=decayOf(x,m);s.last={mode:m,eq:eqOf(x,d),from:x};x=d.prod});s.cur=x;s.fx=[];layout(x);paint();emit('undo')}
+ function goalHTML(){const c=s.cur,g=s.goal,na=s.hist.filter(m=>m==='alpha').length,nb=s.hist.filter(m=>m==='beta').length,done=c.A===g.A&&c.Z===g.Z;
+  const tip=done?`✅ Stable ${nname(g)} reached: ${na} α and ${nb} β⁻ decays.`:c.A<g.A?`The mass number (${c.A}) is below ${g.A}: one α too many. Tap ↶ Undo.`:c.A===g.A&&c.Z<g.Z?`The mass number is right. Now raise Z from ${c.Z} to ${g.Z} with β⁻ (+1 each).`:c.A===g.A&&c.Z>g.Z?`Z is ${c.Z}, above ${g.Z}: one β⁻ too many. Tap ↶ Undo.`:`Only α lowers the mass number (${c.A} → ${g.A}, −4 each). β⁻ raises Z by 1.`;
+  return `<div class="goal${done?' done':''}"><b>🎯 Goal: ${nshort(g)}</b> · now ${nshort(c)} · α used: <b>${na}</b> · β⁻ used: <b>${nb}</b><div>${tip}</div></div>`}
  function say(t){if(el.msg){el.msg.textContent=t;clearTimeout(say.t);say.t=setTimeout(()=>{if(el.msg)el.msg.textContent=''},3500)}}
  function chainTxt(){let x=s.start;const parts=[nshort(x)];s.hist.forEach(m=>{x=decayOf(x,m).prod;parts.push(`<span class="ch">${DSYM[m]}</span> ${nshort(x)}`)});return 'Chain: '+parts.join(' ')}
  function paint(){if(!el.eq)return;const c=s.cur,Nn=c.A-c.Z,band=bandN(c.Z);
   setTxt(el.name,nname(c));setTxt(el.p,String(c.Z));setTxt(el.n,String(Nn));setTxt(el.np,c.Z?(Nn/c.Z).toFixed(2):'—');
-  setTxt(el.st,c.m?'Excited (m): extra energy in the nucleus':c.Z>83?'Too big (Z > 83): alpha decay likely':Nn>band+0.6?'Above the band: too many neutrons':Nn<band-0.6?'Below the band: too few neutrons':'Near the band of stability');
+  setTxt(el.st,c.m?'Excited (m): extra energy in the nucleus':c.Z===82&&c.A>=206&&c.A<=208&&!c.m?'Stable: the end of a natural decay series':c.Z>83?'Too big (Z > 83): alpha decay likely':Nn>band+0.6?'Above the band: too many neutrons':Nn<band-0.6?'Below the band: too few neutrons':'Near the band of stability');
   if(s.last){const e=s.last.eq;
    el.eq.innerHTML=`<div class="eqbig">${eqHTML(e.L,e.R)}</div><div class="sums"><span>Top (mass numbers): ${e.L.map(q=>q.x.A).join(' + ')} = ${e.R.map(q=>q.x.A).join(' + ')} ✔</span><span>Bottom (atomic numbers): ${e.L.map(q=>q.x.Z).join(' + ').replace(/-/g,'−')} = ${e.R.map(q=>q.x.Z).join(' + ').replace(/-/g,'−')} ✔</span></div>`+(s.hist.length>1?`<div class="chain">${chainTxt()}</div>`:'')}
   else el.eq.innerHTML=`<div class="eqbig">${nucHTML(c)}</div><p class="cap" style="text-align:center">Tap a decay button above. The nuclear equation appears here.</p>`;
+  if(s.goal)el.eq.insertAdjacentHTML('afterbegin',goalHTML());
   if(el.cv)el.cv.setAttribute('aria-label',`Nucleus of ${nname(c)}: ${c.Z} protons (red) and ${Nn} neutrons (gray).`)}
  function step(dt){s.t+=dt;if(s.busy>0)s.busy=Math.max(0,s.busy-dt/1.1);
   s.flash=Math.max(0,s.flash-dt*1.5);s.fx.forEach(f=>{f.t+=dt;if(f.vx!==undefined){f.x+=f.vx*dt;f.y+=f.vy*dt}});s.fx=s.fx.filter(f=>f.t<2.2);
@@ -125,24 +133,27 @@ const Decay=(()=>{
    if(f.k==='gamma'){const d=f.t*300,dx=Math.cos(f.ang),dy=Math.sin(f.ang);g.strokeStyle=`rgba(214,160,30,${a})`;g.lineWidth=3;g.beginPath();
     for(let u=0;u<70;u+=2){const w=Math.sin((d+u)/4)*6,px=cx+dx*(d+u)-dy*w,py=cy+dy*(d+u)+dx*w;u?g.lineTo(px,py):g.moveTo(px,py)}g.stroke();lbl(g,cx+dx*(d+40),cy+dy*(d+40)-14,'γ ray','#8a6510')}});
   /* band of stability */
-  const X0=400,Y0=26,W=185,H=200,zx=Z=>X0+Z/100*W,ny=n=>Y0+H-n/155*H;g.fillStyle='#fff';g.fillRect(X0-6,Y0-16,W+16,H+42);g.strokeStyle='#dbe5ee';g.lineWidth=1;g.strokeRect(X0-6,Y0-16,W+16,H+42);
-  g.fillStyle='#4c5a65';g.font='bold 11px system-ui,sans-serif';g.fillText('Band of stability',X0,Y0-4);
+  const X0=400,Y0=26,W=185,H=200,[z0,z1,n0,n1]=s.goal?[74,96,118,150]:[0,100,0,155],zx=Z=>X0+(Z-z0)/(z1-z0)*W,ny=n=>Y0+H-(n-n0)/(n1-n0)*H,clip=()=>{g.save();g.beginPath();g.rect(X0-5,Y0,W+14,H+2);g.clip()};g.fillStyle='#fff';g.fillRect(X0-6,Y0-16,W+16,H+42);g.strokeStyle='#dbe5ee';g.lineWidth=1;g.strokeRect(X0-6,Y0-16,W+16,H+42);
+  g.fillStyle='#4c5a65';g.font='bold 11px system-ui,sans-serif';g.fillText('Band of stability'+(s.goal?' (zoomed in)':''),X0,Y0-4);clip();
   g.beginPath();for(let Z=1;Z<=84;Z++)g.lineTo(zx(Z),ny(bandN(Z)*1.07+1));for(let Z=84;Z>=1;Z--)g.lineTo(zx(Z),ny(bandN(Z)*0.94-1));g.closePath();g.fillStyle='#cfe9d6';g.fill();
-  g.strokeStyle='#c3ccd4';g.setLineDash([4,4]);g.beginPath();g.moveTo(zx(0),ny(0));g.lineTo(zx(100),ny(100));g.stroke();g.setLineDash([]);
-  g.fillStyle='#4c5a65';g.font='10px system-ui,sans-serif';g.fillText('protons (Z) →',X0+W-70,Y0+H+14);g.fillText('N = Z',zx(72),ny(64));g.save();g.translate(X0+2,Y0+H-6);g.rotate(-Math.PI/2);g.fillText('neutrons →',0,8);g.restore();
+  g.strokeStyle='#c3ccd4';g.setLineDash([4,4]);g.beginPath();g.moveTo(zx(0),ny(0));g.lineTo(zx(100),ny(100));g.stroke();g.setLineDash([]);g.restore();
+  g.fillStyle='#4c5a65';g.font='10px system-ui,sans-serif';g.fillText('protons (Z) →',X0+W-70,Y0+H+14);if(!s.goal)g.fillText('N = Z',zx(72),ny(64));g.save();g.translate(X0+2,Y0+H-6);g.rotate(-Math.PI/2);g.fillText('neutrons →',0,8);g.restore();
+  clip();if(s.goal){const gx=zx(s.goal.Z),gy=ny(s.goal.A-s.goal.Z);g.strokeStyle='#d6a01e';g.lineWidth=3;g.beginPath();g.arc(gx,gy,10,0,7);g.stroke();g.fillStyle='#8a6510';g.font='bold 11px system-ui,sans-serif';g.fillText('goal: '+nshort(s.goal),gx-28,gy+24)}
   if(s.start){let x=s.start;const pts=[[x.Z,x.A-x.Z]];s.hist.forEach(m=>{x=decayOf(x,m).prod;pts.push([x.Z,x.A-x.Z])});g.strokeStyle='#4a9fd6';g.lineWidth=2;g.beginPath();pts.forEach(([z,n],i)=>i?g.lineTo(zx(z),ny(n)):g.moveTo(zx(z),ny(n)));g.stroke();
    const [z,n]=pts[pts.length-1];g.beginPath();g.arc(zx(z),ny(n),5.5,0,7);g.fillStyle='#e0675a';g.fill();g.strokeStyle='#fff';g.lineWidth=2;g.stroke()}
+  g.restore();
   g.font='bold 12px system-ui,sans-serif';[['#e0675a','proton'],['#9aa9b6','neutron']].forEach(([c,t],i)=>{g.beginPath();g.arc(16,LH-34+i*18,6,0,7);g.fillStyle=c;g.fill();g.fillStyle='#22313b';g.fillText(t,27,LH-30+i*18)})}
  const loop=makeLoop(step);const api={s,onEvent:null,load,fire};function emit(e){api.onEvent&&api.onEvent(e)}
  api.mount=(h,o)=>{h.innerHTML=`<div class="lab"><div class="ctrls" role="group" aria-label="Decay buttons">
   <button type="button" class="chip dk" data-f="alpha"><img class="pic" src="assets/p-alpha.webp" alt="" width="26" height="26"><span>α Alpha</span></button><button type="button" class="chip dk" data-f="beta"><img class="pic" src="assets/p-beta.webp" alt="" width="26" height="26"><span>β⁻ Beta</span></button><button type="button" class="chip dk" data-f="positron"><img class="pic" src="assets/p-positron.webp" alt="" width="26" height="26"><span>β⁺ Positron</span></button><button type="button" class="chip dk" data-f="ec"><img class="pic" src="assets/p-ec.webp" alt="" width="26" height="26"><span>EC Electron capture</span></button><button type="button" class="chip dk" data-f="gamma"><img class="pic" src="assets/p-gamma.webp" alt="" width="26" height="26"><span>γ Gamma</span></button>
-  <button type="button" class="chip rst" data-reset>↺ Start over</button>${speedChip()}</div>
+  <button type="button" class="chip rst" data-undo>↶ Undo</button><button type="button" class="chip rst" data-reset>↺ Start over</button>${speedChip()}</div>
   <div class="stage"><canvas width="600" height="320" role="img"></canvas><div class="dmsg" aria-live="polite"></div></div>
   <div class="readout"><div class="counts"><div class="cnt"><span class="sw" style="background:#e0675a;border-color:#a8443a"></span>Protons (Z)<b data-k="p"></b></div><div class="cnt"><span class="sw" style="background:#9aa9b6;border-color:#6b7a86"></span>Neutrons (A − Z)<b data-k="n"></b></div><div class="cnt">Neutron-to-proton ratio<b data-k="np"></b></div></div>
   <div class="counts"><div class="cnt" style="justify-content:center"><b data-k="name" style="margin:0"></b></div><div class="status r" data-k="st"></div></div></div>
   <div class="eqline" aria-live="polite"></div></div>`;
   const q=k=>h.querySelector(`[data-k="${k}"]`);el={cv:h.querySelector('canvas'),eq:h.querySelector('.eqline'),msg:h.querySelector('.dmsg'),p:q('p'),n:q('n'),np:q('np'),name:q('name'),st:q('st')};ctx=fitCanvas(el.cv,LW,LH);
-  h.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>fire(b.dataset.f));h.querySelector('[data-reset]').onclick=()=>{load(s.sys);emit('reset')};wireSpeed(h);load(o.sys||s.sys)};
+  h.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>fire(b.dataset.f));h.querySelector('[data-reset]').onclick=()=>{load(s.sys);emit('reset')};wireSpeed(h);
+  s.goal=o.goal||null;h.querySelector('[data-undo]').onclick=undo;h.querySelectorAll('[data-undo],[data-f=positron],[data-f=ec],[data-f=gamma]').forEach(b=>b.style.display=(!!s.goal)===b.hasAttribute('data-undo')?'':'none');load(o.sys||s.sys)};
  api.start=()=>loop.start();api.stop=()=>loop.stop();
  return api})();
 

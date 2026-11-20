@@ -9,8 +9,8 @@ const html=fs.readFileSync(path.join(__dirname,'..',process.argv[2]||'index.html
 const scripts=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m=>m[1]);
 global.window={};global.matchMedia=()=>({matches:false});
 (0,eval)(scripts.slice(0,2).join('\n;\n').replace('const GEN={','var GEN={')+
- ';Object.assign(globalThis,{GEN,MODES,TOPICS,QUIZ_PLAN,topicQ,IDEAS,VIDEO_FOR,DECAYS,BOMB,FISSION,FUSION,decayOf,N,PART,SYM,NUM,nf,fisNew,fisFire,fisStep,fusNew,fusStep,FUSE_T,DLQ,DL_SYS,HL_SYS,state,cpm,TRANS,eqWithBlanks,HCALC,stepsOf,CASES,SLIPS})');
-let fails=0,n=0;const bad=m=>{if(fails++<40)console.log('FAIL',m)};
+ ';Object.assign(globalThis,{GEN,MODES,TOPICS,QUIZ_PLAN,topicQ,IDEAS,VIDEO_FOR,DECAYS,BOMB,FISSION,FUSION,decayOf,N,PART,SYM,NUM,nf,fisNew,fisFire,fisStep,fusNew,fusStep,FUSE_T,DLQ,DL_SYS,HL_SYS,state,cpm,TRANS,eqWithBlanks,HCALC,stepsOf,CASES,SLIPS,EXAM_PLAN,DOSE,SERIES,seriesParts,seriesQ})');
+let fails=0,n=0;const bad=m=>{if(fails++<40||process.env.ALL)console.log('FAIL',m)};
 const strip=s=>String(s).replace(/<[^>]+>/g,'');
 const sums=terms=>terms.reduce((a,t)=>[a[0]+(t.coef||1)*t.x.A,a[1]+(t.coef||1)*t.x.Z],[0,0]);
 function checkEq(L,R,where){n++;const a=sums(L),b=sums(R);if(a[0]!==b[0]||a[1]!==b[1])bad(`${where}: unbalanced ${a} vs ${b}`);
@@ -42,7 +42,7 @@ function checkQ(q,where){n++;if(!q.prompt||!q.hint||!q.why)bad(where+': missing 
  if(q.type==='mc'){if(!q.options.includes(q.answer))bad(where+': answer not in options '+strip(q.prompt));if(new Set(q.options).size!==q.options.length)bad(where+': duplicate options '+q.options.map(strip).join(' | '));
   if(q.options.length<3)bad(where+': only '+q.options.length+' options: '+strip(q.prompt));
   q.options.filter(o=>o!==q.answer).forEach(o=>{if(!q.whys[o])bad(where+': no reason for wrong choice '+strip(o))})}
- if(q.type==='num'){if(!(q.answer>0))bad(where+': bad answer '+q.answer);if(!q.loose){const sh=nf(q.answer,q.sf);if(NUM.sfCount(sh)!==q.sf)bad(`${where}: shown ${sh} has ${NUM.sfCount(sh)} sf`);if(Math.abs(NUM.parseValue(sh)-Number(q.answer.toPrecision(q.sf)))>q.answer*1e-9)bad(where+': shown '+sh+' != '+q.answer)}
+ if(q.type==='num'){if(!(q.answer>0))bad(where+': bad answer '+q.answer);if(!q.loose&&/\.$/.test(nf(q.answer,q.sf)))bad(where+': answer shows a trailing decimal point '+nf(q.answer,q.sf)+': '+strip(q.prompt).slice(0,90));if(!q.loose){const sh=nf(q.answer,q.sf);if(NUM.sfCount(sh)!==q.sf)bad(`${where}: shown ${sh} has ${NUM.sfCount(sh)} sf`);if(Math.abs(NUM.parseValue(sh)-Number(q.answer.toPrecision(q.sf)))>q.answer*1e-9)bad(where+': shown '+sh+' != '+q.answer)}
   (q.slips||[]).forEach(([x])=>{if(Math.abs(x-q.answer)<=q.answer*0.006)bad(where+': slip equals answer '+strip(q.prompt))})}
  if(q.type==='nuc'){checkEq(q.L,q.R,where+' '+strip(q.prompt).slice(0,40));if(!q.blanks.length)bad(where+': no blanks')}
  if(q.then)checkQ(q.then,where+'→then')}
@@ -54,13 +54,21 @@ for(const m of MODES.filter(m=>m.id!=='quiz')){const reps=m.id==='decay'||m.id==
 for(let i=0;i<2000;i++){const f=CASES[i%CASES.length],q=f();let k=0,p=q;while(p){k++;if(p.type==='num'&&!stepsOf(p))bad('case calc without step map');p=p.then}n++;if(k!==4)bad('case has '+k+' parts');if(!q.story)bad('case without story')}
 // Fix my mistakes: every slip code makes valid questions
 for(const [code,[label,g]] of Object.entries(SLIPS))for(let i=0;i<200;i++)checkQ(g(),'fix/'+code);
-for(const t of QUIZ_PLAN)for(let i=0;i<600;i++){const q=topicQ(t);q.topic=t;checkQ(q,'quiz/'+t);if(q.lab)bad('quiz question with a lab: '+t)}
+for(const t of new Set([...QUIZ_PLAN,...EXAM_PLAN]))for(let i=0;i<600;i++){const q=topicQ(t);q.topic=t;checkQ(q,'quiz/'+t);if(q.lab)bad('quiz question with a lab: '+t)}
 // Step Map: every typed half-life problem has a map, and its steps lead to the graded answer
 for(let i=0;i<3000;i++){const q=HCALC[i%HCALC.length]();n++;const M=stepsOf(q);if(!M){bad('no step map: '+strip(q.prompt));continue}
  const S=M.steps,last=S[S.length-1],m=q.map;let end;
  if(m.k==='left'||m.k==='init')end=last.a;else if(m.k==='time')end=last.a*m.t;else if(m.k==='half')end=m.n*m.t/last.a;else end=last.a*5730;
  if(Math.abs(end-q.answer)>q.answer*1e-9)bad(`step map ends at ${end}, answer ${q.answer}: ${strip(q.prompt)}`);
  S.forEach(st=>{if(!(st.a>0)||/undefined|NaN/.test(st.p))bad('bad step '+st.p)});if(S.length>7)bad('step map too long '+S.length)}
+// Dose & Units: every problem has a Step Map whose last step is the graded answer
+for(let i=0;i<3500;i++){const q=DOSE[i%DOSE.length]();checkQ(q,'dose');n++;const M=stepsOf(q);if(!M){bad('dose problem without a step map');continue}
+ const last=M.steps[M.steps.length-1].a;if(Math.abs(last-q.answer)>q.answer*1e-9)bad(`dose step map ends at ${last}, answer ${q.answer}: ${strip(q.prompt)}`);M.steps.forEach(st=>{if(!(st.a>0)||/undefined|NaN/.test(st.p))bad('bad dose step '+st.p)})}
+// Decay series: the α and β⁻ counts really lead from the parent to the lead isotope, and both Step Maps end at the answers
+for(const [p,d] of SERIES){const q=seriesParts(p,d);let x=p;for(let i=0;i<q.answer;i++)x=decayOf(x,'alpha').prod;for(let i=0;i<q.then.answer;i++)x=decayOf(x,'beta').prod;
+ chk(x.s+x.A,d.s+d.A,`series ${p.s}-${p.A}`);[q,q.then].forEach(r=>{n++;const M=stepsOf(r);if(!M||M.steps[M.steps.length-1].a!==r.answer)bad('series step map end '+p.s+p.A);if(!Number.isInteger(r.answer)||r.answer<1)bad('series count '+r.answer)})}
+{const q=seriesParts(N(238,92),N(206,82));chk(q.answer+','+q.then.answer,'8,6','MOM U-238 series: 8 α, 6 β');}
+chk(Number((25.0*37).toPrecision(3)),925,'textbook 14.4a 25.0 mCi in MBq');chk(Number((555/37).toPrecision(3)),15,'textbook 14.4b 555 MBq in mCi');
 IDEAS.forEach((it,i)=>{n++;if(it.c.filter(c=>c[1]).length!==1)bad('IDEAS '+i+' needs exactly one right answer');if(!TOPICS[it.t])bad('IDEAS '+i+' topic '+it.t);if(!VIDEO_FOR[it.v])bad('IDEAS '+i+' video '+it.v)});
 Object.keys(TOPICS).forEach(t=>{n++;if(!seenTopics.has(t))bad('topic never generated: '+t)});
 // 4) fission and fusion physics
