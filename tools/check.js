@@ -9,7 +9,7 @@ const html=fs.readFileSync(path.join(__dirname,'..',process.argv[2]||'index.html
 const scripts=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m=>m[1]);
 global.window={};global.matchMedia=()=>({matches:false});
 (0,eval)(scripts.slice(0,2).join('\n;\n').replace('const GEN={','var GEN={')+
- ';Object.assign(globalThis,{GEN,MODES,TOPICS,QUIZ_PLAN,topicQ,IDEAS,VIDEO_FOR,DECAYS,BOMB,FISSION,FUSION,decayOf,N,PART,SYM,NUM,nf,fisNew,fisFire,fisStep,fusNew,fusStep,FUSE_T,DLQ,DL_SYS,HL_SYS,state,cpm,TRANS,eqWithBlanks})');
+ ';Object.assign(globalThis,{GEN,MODES,TOPICS,QUIZ_PLAN,topicQ,IDEAS,VIDEO_FOR,DECAYS,BOMB,FISSION,FUSION,decayOf,N,PART,SYM,NUM,nf,fisNew,fisFire,fisStep,fusNew,fusStep,FUSE_T,DLQ,DL_SYS,HL_SYS,state,cpm,TRANS,eqWithBlanks,HCALC,stepsOf})');
 let fails=0,n=0;const bad=m=>{if(fails++<40)console.log('FAIL',m)};
 const strip=s=>String(s).replace(/<[^>]+>/g,'');
 const sums=terms=>terms.reduce((a,t)=>[a[0]+(t.coef||1)*t.x.A,a[1]+(t.coef||1)*t.x.Z],[0,0]);
@@ -50,6 +50,12 @@ for(const m of MODES.filter(m=>m.id!=='quiz')){const reps=m.id==='decay'||m.id==
  else if(m.id==='half'){for(const sys of [null,...HL_SYS.map(h=>h[0])]){state.labSys=sys;for(let i=0;i<500;i++)checkQ(GEN.half(),'half/'+sys)}state.labSys=null}
  else for(let i=0;i<reps;i++)checkQ(GEN[m.id](),m.id)}
 for(const t of QUIZ_PLAN)for(let i=0;i<600;i++){const q=topicQ(t);q.topic=t;checkQ(q,'quiz/'+t);if(q.lab)bad('quiz question with a lab: '+t)}
+// Step Map: every typed half-life problem has a map, and its steps lead to the graded answer
+for(let i=0;i<3000;i++){const q=HCALC[i%HCALC.length]();n++;const M=stepsOf(q);if(!M){bad('no step map: '+strip(q.prompt));continue}
+ const S=M.steps,last=S[S.length-1],m=q.map;let end;
+ if(m.k==='left'||m.k==='init')end=last.a;else if(m.k==='time')end=last.a*m.t;else if(m.k==='half')end=m.n*m.t/last.a;else end=last.a*5730;
+ if(Math.abs(end-q.answer)>q.answer*1e-9)bad(`step map ends at ${end}, answer ${q.answer}: ${strip(q.prompt)}`);
+ S.forEach(st=>{if(!(st.a>0)||/undefined|NaN/.test(st.p))bad('bad step '+st.p)});if(S.length>7)bad('step map too long '+S.length)}
 IDEAS.forEach((it,i)=>{n++;if(it.c.filter(c=>c[1]).length!==1)bad('IDEAS '+i+' needs exactly one right answer');if(!TOPICS[it.t])bad('IDEAS '+i+' topic '+it.t);if(!VIDEO_FOR[it.v])bad('IDEAS '+i+' video '+it.v)});
 Object.keys(TOPICS).forEach(t=>{n++;if(!seenTopics.has(t))bad('topic never generated: '+t)});
 // 4) fission and fusion physics
