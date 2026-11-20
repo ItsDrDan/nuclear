@@ -2,7 +2,7 @@
 
 Study game for CHEM 3A, matched to Lecture 30 (Nuclear Chemistry), the Chapter 14 learning objectives in Canvas, the Week 17 MyOpenMath homework, and the CHEM 3A textbook's Chapter 14. Live at https://itsdrdan.github.io/nuclear/.
 
-Current version: 1.2
+Current version: 1.3
 
 - `index.html`: the whole game (standalone). Loads the brand kit (`games/brand/itsdrdan.css`, `embed.js`), `chemparse.v2.js` and `games/track.js` for anonymous stats.
 - Modes:
@@ -12,6 +12,9 @@ Current version: 1.2
   - ⏳ Half-Life Lab: 400 nuclei that halve with each ⏭ half-life, amount-vs-time graph, mass and percent readouts (textbook half-lives), plus typed problems: amount left, time, starting amount, half-life, radiocarbon age, mCi activity (whole numbers of half-lives, 3 sig figs). 🧭 Step Map (v1.2) under every typed problem: n = time ÷ half-life, then one halving (or doubling) arrow at a time, each checked with a hint; not shown in Skill Check.
   - 🔥 Fission & Fusion: U-235 chain reaction with fuel amount (critical mass) and control rods; D–T fusion that only happens when hot; fission/fusion equations (challenge).
   - 🏥 Radiation & You: isotopes and nuclide symbols, stability, units (Bq, Ci, Gy, Sv), biological effects, background and radon, medical isotopes (Tc-99m, I-131, F-18 PET, brachytherapy), fission/fusion ideas.
+  - 🩺 Patient Cases (v1.3): four linked-part cases (story → decay equation → activity left → protection → what it means): Mateo's V/Q lung scan with Tc-99m (from the textbook's Chapter 14 opener), I-131 thyroid treatment, an F-18 PET scan, and Ir-192 brachytherapy. A revealed part makes the whole case assisted.
+  - 🔧 Fix my mistakes (v1.3): the game counts each kind of slip once per question on this device (beta particle written as +1, swapped numbers, kept the old symbol, divided by 2n, stopped at n, sig figs, …). After a slip repeats, it offers a 5-question practice set aimed at that slip; the Chemistry Journey panel lists the top three. Each correct practice answer lowers the count.
+  - 🔊 Geiger clicks (v1.3): Shield Lab sound toggle, off by default; the click rate follows the counter (capped so very high counts buzz).
   - 🎯 Skill Check: 10 questions across 10 topics, one try each, then a study plan.
 - Deep links: `?mode=decay|balance|shield|half|power|ideas|quiz`, and `&sys=<sample>` for the Decay Lab (`u238 ra226 am241 c14 i131 co60 f18 i125 tc99m`) or Half-Life Lab (`i131 tc99m c14 co60 ir192 rn222 f18`), e.g. `?mode=decay&sys=c14`.
 - Source: edit `tools/page-src.html` (page, questions, UI) and `tools/engine-src.js` (nuclear data and the four labs), then `node tools/build.js` to rebuild `index.html`.

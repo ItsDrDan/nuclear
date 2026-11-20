@@ -9,7 +9,7 @@ const html=fs.readFileSync(path.join(__dirname,'..',process.argv[2]||'index.html
 const scripts=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m=>m[1]);
 global.window={};global.matchMedia=()=>({matches:false});
 (0,eval)(scripts.slice(0,2).join('\n;\n').replace('const GEN={','var GEN={')+
- ';Object.assign(globalThis,{GEN,MODES,TOPICS,QUIZ_PLAN,topicQ,IDEAS,VIDEO_FOR,DECAYS,BOMB,FISSION,FUSION,decayOf,N,PART,SYM,NUM,nf,fisNew,fisFire,fisStep,fusNew,fusStep,FUSE_T,DLQ,DL_SYS,HL_SYS,state,cpm,TRANS,eqWithBlanks,HCALC,stepsOf})');
+ ';Object.assign(globalThis,{GEN,MODES,TOPICS,QUIZ_PLAN,topicQ,IDEAS,VIDEO_FOR,DECAYS,BOMB,FISSION,FUSION,decayOf,N,PART,SYM,NUM,nf,fisNew,fisFire,fisStep,fusNew,fusStep,FUSE_T,DLQ,DL_SYS,HL_SYS,state,cpm,TRANS,eqWithBlanks,HCALC,stepsOf,CASES,SLIPS})');
 let fails=0,n=0;const bad=m=>{if(fails++<40)console.log('FAIL',m)};
 const strip=s=>String(s).replace(/<[^>]+>/g,'');
 const sums=terms=>terms.reduce((a,t)=>[a[0]+(t.coef||1)*t.x.A,a[1]+(t.coef||1)*t.x.Z],[0,0]);
@@ -44,11 +44,16 @@ function checkQ(q,where){n++;if(!q.prompt||!q.hint||!q.why)bad(where+': missing 
   q.options.filter(o=>o!==q.answer).forEach(o=>{if(!q.whys[o])bad(where+': no reason for wrong choice '+strip(o))})}
  if(q.type==='num'){if(!(q.answer>0))bad(where+': bad answer '+q.answer);if(!q.loose){const sh=nf(q.answer,q.sf);if(NUM.sfCount(sh)!==q.sf)bad(`${where}: shown ${sh} has ${NUM.sfCount(sh)} sf`);if(Math.abs(NUM.parseValue(sh)-Number(q.answer.toPrecision(q.sf)))>q.answer*1e-9)bad(where+': shown '+sh+' != '+q.answer)}
   (q.slips||[]).forEach(([x])=>{if(Math.abs(x-q.answer)<=q.answer*0.006)bad(where+': slip equals answer '+strip(q.prompt))})}
- if(q.type==='nuc'){checkEq(q.L,q.R,where+' '+strip(q.prompt).slice(0,40));if(!q.blanks.length)bad(where+': no blanks');if(q.then)checkQ(q.then,where+'→then')}}
+ if(q.type==='nuc'){checkEq(q.L,q.R,where+' '+strip(q.prompt).slice(0,40));if(!q.blanks.length)bad(where+': no blanks')}
+ if(q.then)checkQ(q.then,where+'→then')}
 for(const m of MODES.filter(m=>m.id!=='quiz')){const reps=m.id==='decay'||m.id==='half'?0:4000;
  if(m.id==='decay'){for(const [sys] of DL_SYS){state.labSys=sys;for(let i=0;i<300;i++)checkQ(GEN.decay(),'decay/'+sys)}state.labSys=null}
  else if(m.id==='half'){for(const sys of [null,...HL_SYS.map(h=>h[0])]){state.labSys=sys;for(let i=0;i<500;i++)checkQ(GEN.half(),'half/'+sys)}state.labSys=null}
  else for(let i=0;i<reps;i++)checkQ(GEN[m.id](),m.id)}
+// Patient Cases: every case has 4 linked parts, a story, and a Step Map on its calculation
+for(let i=0;i<2000;i++){const f=CASES[i%CASES.length],q=f();let k=0,p=q;while(p){k++;if(p.type==='num'&&!stepsOf(p))bad('case calc without step map');p=p.then}n++;if(k!==4)bad('case has '+k+' parts');if(!q.story)bad('case without story')}
+// Fix my mistakes: every slip code makes valid questions
+for(const [code,[label,g]] of Object.entries(SLIPS))for(let i=0;i<200;i++)checkQ(g(),'fix/'+code);
 for(const t of QUIZ_PLAN)for(let i=0;i<600;i++){const q=topicQ(t);q.topic=t;checkQ(q,'quiz/'+t);if(q.lab)bad('quiz question with a lab: '+t)}
 // Step Map: every typed half-life problem has a map, and its steps lead to the graded answer
 for(let i=0;i<3000;i++){const q=HCALC[i%HCALC.length]();n++;const M=stepsOf(q);if(!M){bad('no step map: '+strip(q.prompt));continue}

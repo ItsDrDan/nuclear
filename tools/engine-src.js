@@ -153,6 +153,10 @@ const SRC0={alpha:4000,beta:3000,gamma:2000,neutron:1500},BG=30,ALPHA_RANGE=5;/*
 const IONSTEP={alpha:4,beta:20,gamma:90,neutron:140};
 /* expected counts per minute at the counter (inverse square from 10 cm) */
 function cpm(rad,shield,d){if(rad==='alpha'&&d>ALPHA_RANGE)return BG;return Math.round(BG+SRC0[rad]*TRANS[rad][shield]*(10/d)**2)}
+/* Geiger clicks (off by default): short noise bursts at the counter's rate, capped so very high counts become a buzz */
+const Click=(()=>{let ctx=null,buf=null;const api={on:false,
+ ensure(){if(!ctx){const AC=typeof window!=='undefined'&&(window.AudioContext||window.webkitAudioContext);if(!AC)return false;ctx=new AC();const L=Math.floor(ctx.sampleRate*0.004);buf=ctx.createBuffer(1,L,ctx.sampleRate);const d=buf.getChannelData(0);for(let i=0;i<L;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/L,3)}if(ctx.state==='suspended')ctx.resume();return true},
+ play(k,span){if(!ctx||!api.on)return;for(let i=0;i<k;i++){const s=ctx.createBufferSource(),g=ctx.createGain();s.buffer=buf;g.gain.value=0.45;s.connect(g);g.connect(ctx.destination);s.start(ctx.currentTime+Math.random()*span)}}};return api})();
 const RADLBL={alpha:'α Alpha',beta:'β Beta',gamma:'γ Gamma',neutron:'n Neutron'};
 const Shield=(()=>{
  const s={rad:'alpha',sh:'none',d:10,ps:[],ions:[],t:0,acc:0,shown:BG,tick:0,seen:{},dSeen:[],flash:0};let el={},ctx=null;
@@ -174,6 +178,7 @@ const Shield=(()=>{
    if(p.y<0||p.y>LH||p.x>LW)p.dead=1;
    if(!p.dead||p.dead<0.01){p.ion+=Math.hypot(p.vx,p.vy)*dt;while(p.ion>IONSTEP[p.k]){p.ion-=IONSTEP[p.k];if(s.ions.length<700)s.ions.push({x:p.x+(Math.random()-0.5)*6,y:p.y+(Math.random()-0.5)*6,t:0,sg:Math.random()<0.5})}}});
   s.ps=s.ps.filter(p=>p.dead<0.6);s.ions.forEach(i=>i.t+=dt);s.ions=s.ions.filter(i=>i.t<1.3);s.flash=Math.max(0,s.flash-dt*4);
+  if(Click.on&&dt>0){const lam=Math.min(cpm(s.rad,s.sh,s.d)/60,70)*dt;let k=lam<1?(Math.random()<lam?1:0):Math.max(0,Math.round(lam+(Math.random()+Math.random()+Math.random()-1.5)*Math.sqrt(lam)*1.4));if(k)Click.play(Math.min(k,8),dt)}
   s.tick+=dt;if(s.tick>0.5){s.tick=0;const e=cpm(s.rad,s.sh,s.d);s.shown=Math.max(0,Math.round(e+(Math.random()-0.5)*2*Math.sqrt(e)));readout()}
   draw()}
  function draw(){if(!ctx)return;const g=ctx;g.clearRect(0,0,LW,LH);g.fillStyle='#fbfdff';g.fillRect(0,0,LW,LH);
@@ -194,13 +199,14 @@ const Shield=(()=>{
  api.mount=(h,o)=>{h.innerHTML=`<div class="lab">
   <div class="ctrls" role="group" aria-label="Radiation"><span class="lbl">Radiation:</span>${['alpha','beta','gamma','neutron'].map(k=>`<button type="button" class="chip" data-rad="${k}">${RADLBL[k]}</button>`).join('')}</div>
   <div class="ctrls" role="group" aria-label="Shield"><span class="lbl">Shield:</span>${SHIELDS.map(([k,t])=>`<button type="button" class="chip" data-sh="${k}">${t}</button>`).join('')}</div>
-  <div class="ctrls"><label class="slider">📏 Counter distance <input type="range" min="2" max="40" step="1" data-dist aria-label="Distance from source to counter in centimeters"><output data-dout></output></label>${speedChip()}</div>
+  <div class="ctrls"><label class="slider">📏 Counter distance <input type="range" min="2" max="40" step="1" data-dist aria-label="Distance from source to counter in centimeters"><output data-dout></output></label>${speedChip()}<button type="button" class="chip" data-snd aria-pressed="${Click.on}">${Click.on?'🔊 Clicks on':'🔇 Clicks off'}</button></div>
   <div class="stage"><canvas width="600" height="320" role="img"></canvas></div>
   <div class="geiger" role="status"><span>📟 Counter:</span> <b data-cnt>0</b> <span>counts/min</span> <small data-note></small></div>
   <p class="cap">+ and − marks are ions made along each track (ionizing power). Background radiation alone gives about ${BG} counts/min.</p></div>`;
   el={root:h,cv:h.querySelector('canvas'),dist:h.querySelector('[data-dist]'),dout:h.querySelector('[data-dout]'),cnt:h.querySelector('[data-cnt]'),note:h.querySelector('[data-note]')};ctx=fitCanvas(el.cv,LW,LH);
   h.querySelectorAll('[data-rad]').forEach(b=>b.onclick=()=>set('rad',b.dataset.rad));h.querySelectorAll('[data-sh]').forEach(b=>b.onclick=()=>set('sh',b.dataset.sh));
   el.dist.oninput=()=>{s.d=+el.dist.value;setTxt(el.dout,s.d+' cm');s.dSeen.push(s.d);s.shown=cpm(s.rad,s.sh,s.d);readout();emit('set:d')};
+  const snd=h.querySelector('[data-snd]');snd.onclick=()=>{if(!Click.on&&!Click.ensure()){snd.textContent='🔇 No sound on this device';return}Click.on=!Click.on;if(Click.on)Click.ensure();snd.textContent=Click.on?'🔊 Clicks on':'🔇 Clicks off';snd.setAttribute('aria-pressed',Click.on)};
   wireSpeed(h);Object.assign(s,{rad:o.rad||'alpha',sh:o.sh||'none',d:o.d||10,ps:[],ions:[],seen:{},dSeen:[o.d||10]});s.seen[s.rad+':'+s.sh]=1;sync()};
  api.start=()=>loop.start();api.stop=()=>loop.stop();return api})();
 
