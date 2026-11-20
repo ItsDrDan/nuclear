@@ -493,9 +493,9 @@ function topicQ(t){
 const GEN={
  decay(){const sys=state.labSys&&DL_SYS.some(d=>d[0]===state.labSys)?state.labSys:pick(DL_SYS)[0];return pickNew('dl'+sys,DLQ.filter(d=>d.for.includes(sys))).f(sys)},
  balance(){return pickNew('bal',[balProd,balProd,balPart,balWords,bombQ,bombQ,dtypeQ,multiQ])()},
- shield(){return Math.random()<0.7?pickNew('sl',SLQ)():ideaQ(pickNew('pen',ideasOf('pen')))},
- half(){return Math.random()<0.45?pickNew('hl',HLQ)():Math.random()<0.8?pickNew('hc',HCALC)():ideaQ(pickNew('hi',ideasOf('halfidea')))},
- power(){const r=Math.random();return r<0.5?pickNew('pl',PLQ)():r<0.65?pick([fisEqQ,fisCountQ,fusEqQ])():ideaQ(pickNew('fi',ideasOf('fission')))},
+ shield(){if(state.firstLab){state.firstLab=false;return pickNew('sl',SLQ)()}return Math.random()<0.7?pickNew('sl',SLQ)():ideaQ(pickNew('pen',ideasOf('pen')))},
+ half(){if(state.firstLab){state.firstLab=false;return pickNew('hl',HLQ)()}return Math.random()<0.45?pickNew('hl',HLQ)():Math.random()<0.8?pickNew('hc',HCALC)():ideaQ(pickNew('hi',ideasOf('halfidea')))},
+ power(){if(state.firstLab){state.firstLab=false;return pickNew('pl',PLQ)()}const r=Math.random();return r<0.5?pickNew('pl',PLQ)():r<0.65?pick([fisEqQ,fisCountQ,fusEqQ])():ideaQ(pickNew('fi',ideasOf('fission')))},
  ideas(){const r=Math.random();return r<0.25?pick([pnQ,symQ,isoQ])():ideaQ(pickNew('id',IDEAS.filter(i=>['types','health','iso'].includes(i.t))))},
  quiz(){const t=state.quiz.plan[state.quiz.i];const q=topicQ(t);q.topic=t;return q}};
 /* chips above the question that pick a lab sample */
@@ -652,7 +652,7 @@ document.addEventListener('keydown',e=>{if(e.ctrlKey||e.metaKey||e.altKey)return
 document.addEventListener('touchend',e=>{const b=e.target.closest&&e.target.closest('button');if(b&&b.disabled)e.preventDefault()},{passive:false});
 /* Deep links: ?mode=decay|balance|shield|half|power|ideas|quiz opens that mode; &sys=<sample> picks a Decay or Half-Life Lab sample (e.g. ?mode=decay&sys=c14). For this visit only. */
 (()=>{const P=new URLSearchParams(location.search),m=P.get('mode'),y=P.get('sys');
- if(MODES.some(x=>x.id===m))state.mode=m;
+ if(MODES.some(x=>x.id===m)){state.mode=m;state.firstLab=true}
  if(y&&(DL_SYS.some(d=>d[0]===y)||HL_SYS.some(h=>h[0]===y))){state.labSys=y;if(!m)state.mode=DL_SYS.some(d=>d[0]===y)?'decay':'half'}
  if(m||y)addEventListener('load',()=>setTimeout(()=>{const e=$('modes');if(e)scrollTo(0,e.getBoundingClientRect().top+scrollY-8)},150))})();
 /* The shared Feedback pill (brand/feedback.js) is fixed bottom-right; on phones it covered Show Answer. Hide it while the answer buttons are on screen. */
